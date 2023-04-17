@@ -1,4 +1,4 @@
-package com.example.graduate_work_team2;
+package com.example.graduate_work_team2.service;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,7 +39,6 @@ public class WebSecurityConfig {
                         authz
                                 .mvcMatchers(AUTH_WHITELIST).permitAll()
                                 .mvcMatchers("/ads/**", "/users/**").authenticated()
-
                 )
                 .cors().disable()
                 .httpBasic(withDefaults());
