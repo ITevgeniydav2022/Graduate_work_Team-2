@@ -5,6 +5,8 @@ import lombok.Data;
 @Data
 public class FullAdsDto {
 
+    private int pk;
+
     private String authorFirstName;
 
     private String authorLastName;
@@ -16,8 +18,6 @@ public class FullAdsDto {
     private String image;
 
     private String phone;
-
-    private int pk;
 
     private int price;
 
