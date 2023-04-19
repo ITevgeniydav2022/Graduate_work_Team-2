@@ -47,4 +47,5 @@ public class Ads {
     @OneToOne()
     @JoinColumn()
     private Image image;
+
 }

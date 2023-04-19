@@ -99,11 +99,11 @@ public class CommentController {
     public ResponseEntity<CommentDto> updateComment(@PathVariable long adsId, @PathVariable long comId,
                                                           @RequestBody CommentDto updateCommentDto,
                                                           Authentication authentication) {
-        CommentDto updatedCommentDto = commentService.updateComment(adsId,comId,
+        CommentDto updatedCommentDto = commentService.updateComment(adsId, comId,
                 updateCommentDto, authentication);
         if (updateCommentDto.equals(updatedCommentDto)) {
             return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).build();
         }
         return ResponseEntity.ok(updatedCommentDto);
-
+    }
 }

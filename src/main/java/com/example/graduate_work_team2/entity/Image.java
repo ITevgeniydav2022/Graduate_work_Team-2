@@ -53,4 +53,5 @@ public class Image {
     public String toString() {
         return "Объявление: id = " + this.getId() + ", инфо = " + Arrays.toString((this.getData()));
     }
+
 }
