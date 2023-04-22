@@ -3,6 +3,7 @@ package com.example.graduate_work_team2.controller;
 import com.example.graduate_work_team2.dto.AdsDto;
 import com.example.graduate_work_team2.dto.CreateAdsDto;
 import com.example.graduate_work_team2.dto.FullAdsDto;
+import com.example.graduate_work_team2.dto.ResponseWrapperAds;
 import com.example.graduate_work_team2.entity.Ads;
 import com.example.graduate_work_team2.service.AdsService;
 import com.example.graduate_work_team2.service.ImageService;
@@ -57,8 +58,8 @@ public class AdsController {
             }
     )
     @GetMapping
-    public ResponseWrapper<AdsDto> getAllAds() {
-        return ResponseWrapper.of(adsService.getAllAds());
+    public ResponseWrapperAds<AdsDto> getAllAds() {
+        return ResponseWrapperAds.of(adsService.getAllAds());
     }
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     @Operation(summary = "Добавление объявления",
@@ -109,7 +110,7 @@ public class AdsController {
             }
     )
     @DeleteMapping("/{adsId}")
-    public ResponseEntity<HttpStatus> removeAds(@PathVariable long adsId, Authentication authentication) {
+    public ResponseEntity<HttpStatus> removeAds(@PathVariable long adsId, Authentication authentication) throws IOException {
         if (adsService.removeAdsById(adsId, authentication)) {
             return ResponseEntity.ok().build();
         }
@@ -150,8 +151,8 @@ public class AdsController {
             }
     )
     @GetMapping("/me")
-    public ResponseWrapper<AdsDto> getAdsMe(Authentication authentication) {
-        return ResponseWrapper.of(adsService.getAdsMe(authentication));
+    public ResponseWrapperAds<AdsDto> getAdsMe(Authentication authentication) {
+        return ResponseWrapperAds.of(adsService.getAdsMe(authentication));
     }
     @Operation(summary = "Редактирование фото в объявлении",
             responses = {

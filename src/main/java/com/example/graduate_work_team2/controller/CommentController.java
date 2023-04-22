@@ -1,7 +1,7 @@
 package com.example.graduate_work_team2.controller;
 
 import com.example.graduate_work_team2.dto.CommentDto;
-import com.example.graduate_work_team2.entity.Comment;
+import com.example.graduate_work_team2.dto.ResponseWrapperComment;
 import com.example.graduate_work_team2.service.CommentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -44,8 +44,8 @@ public class CommentController {
             }
     )
     @GetMapping("/{adsId}/comments")
-    public ResponseWrapper<CommentDto> getAdsComments(@PathVariable long adsId) {
-        return ResponseWrapper.of(commentService.getComments(adsId));
+    public ResponseWrapperComment<CommentDto> getAdsComments(@PathVariable long adsId) {
+        return ResponseWrapperComment.of(commentService.getComments(adsId));
     }
     @Operation(summary = "Добавить комментарий к объявлению",
             responses = {
@@ -99,11 +99,11 @@ public class CommentController {
     public ResponseEntity<CommentDto> updateComment(@PathVariable long adsId, @PathVariable long comId,
                                                           @RequestBody CommentDto updateCommentDto,
                                                           Authentication authentication) {
-        CommentDto updatedCommentDto = commentService.updateComment(adsId,comId,
+        CommentDto updatedCommentDto = commentService.updateComment(adsId, comId,
                 updateCommentDto, authentication);
         if (updateCommentDto.equals(updatedCommentDto)) {
             return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).build();
         }
         return ResponseEntity.ok(updatedCommentDto);
-
+    }
 }
