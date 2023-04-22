@@ -43,4 +43,5 @@ public class Comment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pk_ads")
     private Ads ad;
+
 }
