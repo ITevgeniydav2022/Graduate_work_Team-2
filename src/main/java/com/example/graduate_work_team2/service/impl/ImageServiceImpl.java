@@ -4,6 +4,7 @@ import com.example.graduate_work_team2.dto.AdsDto;
 import com.example.graduate_work_team2.entity.Ads;
 import com.example.graduate_work_team2.entity.Image;
 import com.example.graduate_work_team2.entity.User;
+import com.example.graduate_work_team2.exception.AdsNotFoundException;
 import com.example.graduate_work_team2.mapper.AdsMapper;
 import com.example.graduate_work_team2.repository.AdsRepository;
 import com.example.graduate_work_team2.repository.ImageRepository;
@@ -42,14 +43,13 @@ public class ImageServiceImpl implements ImageService {
         image.setData(imageFile.getBytes());
         image.setFileSize(imageFile.getSize());
         image.setMediaType(imageFile.getContentType());
-        image.setData(imageFile.getBytes());
         return imageRepository.save(image);
     }
 
     @Override
     public AdsDto updateImage(MultipartFile imageFile, Authentication authentication, long adsId) throws IOException {
-        Ads ads = adsRepository.findById(adsId).orElseThrow(() -> new NotFoundException("Объявление с id " + adsId + " не найдено!"));
-
+        Ads ads = adsRepository.findById(adsId).orElseThrow(() ->
+                new AdsNotFoundException("Объявление с id " + adsId + " не найдено!"));
         User user = userRepository.findByEmail(authentication.getName()).orElseThrow();
         if (ads.getAuthor().getEmail().equals(user.getEmail()) || user.getRole().getAuthority().equals("ADMIN")) {
             Image updatedImage = imageRepository.findByAdsId(adsId);

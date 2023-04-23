@@ -47,7 +47,6 @@ public class AdsServiceImpl implements AdsService {
     public AdsDto addAds(CreateAdsDto createAdsDto, MultipartFile imageFiles) throws IOException {
         User user = userRepository.findByEmail(SecurityContextHolder.getContext()
                 .getAuthentication().getName()).orElseThrow();
-
         Ads ads = adsMapper.fromAdsDto(createAdsDto);
         ads.setAuthor(user);
         ads.setImage(imageService.uploadImage(imageFiles));
