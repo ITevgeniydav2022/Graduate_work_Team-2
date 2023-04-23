@@ -16,13 +16,15 @@ import java.util.Collection;
  * @author Одокиенко Екатерина
  */
 public interface UserService {
-    /**
-     * Метод создания пользователя
-     *
-     * @param createUserDto - объект класса "Пользователь" для передачи данных
-     * @return User
-     */
-    UserDto createUser(CreateUserDto createUserDto);
+
+//позже доделаю
+//    /**
+//     * Метод создания пользователя
+//     *
+//     * @param createUserDto - объект класса "Пользователь" для передачи данных
+//     * @return User
+//     */
+//    UserDto createUser(CreateUserDto createUserDto);
 
     /**
      * Метод получения коллекции всех существующих пользователей
@@ -57,11 +59,12 @@ public interface UserService {
     /**
      * Метод изменения пароля пользователя
      *
-     * @param newPassword - новый пароль
+     * @param newPassword     - новый пароль
      * @param currentPassword - старый пароль
      * @return Возвращает true если пароль успешно изменен, иначе false
      */
     void updatePassword(String newPassword, String currentPassword);
+
     /**
      * Метод изменения аватара пользователя
      *

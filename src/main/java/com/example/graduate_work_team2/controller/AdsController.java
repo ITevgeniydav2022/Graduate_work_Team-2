@@ -5,6 +5,7 @@ import com.example.graduate_work_team2.dto.CreateAdsDto;
 import com.example.graduate_work_team2.dto.FullAdsDto;
 import com.example.graduate_work_team2.dto.ResponseWrapperAds;
 import com.example.graduate_work_team2.entity.Ads;
+import com.example.graduate_work_team2.mapper.AdsMapper;
 import com.example.graduate_work_team2.service.AdsService;
 import com.example.graduate_work_team2.service.ImageService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,6 +14,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +35,7 @@ import java.io.IOException;
  * @author Одокиенко Екатерина
  */
 @CrossOrigin(value = "http://localhost:3000")
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/ads")
 @Tag(name = "Объявления", description = "AdsController")
@@ -40,11 +43,8 @@ public class AdsController {
     private final AdsService adsService;
 
     private final ImageService imagesService;
+    private final AdsMapper adsMapper;
 
-    public AdsController(AdsService adsService, ImageService imagesService) {
-        this.adsService = adsService;
-        this.imagesService = imagesService;
-    }
     @Operation(summary = "Получить все объявления",
             responses = {
                     @ApiResponse(
@@ -94,8 +94,8 @@ public class AdsController {
             }
     )
     @GetMapping("/{adsId}")
-    public ResponseEntity<FullAdsDto> getFullAdsDto(@PathVariable("adsId") Long adsId,  Long comId) {
-        return ResponseEntity.ok(adsMapper.toFullAdsDto(adsService.getAdsById(adsId,comId)));
+    public ResponseEntity<FullAdsDto> getFullAdsDto(@PathVariable("adsId") Long adsId) {
+        return ResponseEntity.ok(adsMapper.toFullAdsDto(adsService.getAdsById(adsId)));
     }
     @Operation(summary = "Удаление объявления",
             responses = {

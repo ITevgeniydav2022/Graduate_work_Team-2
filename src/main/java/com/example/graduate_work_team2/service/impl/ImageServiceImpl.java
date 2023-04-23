@@ -4,6 +4,7 @@ import com.example.graduate_work_team2.dto.AdsDto;
 import com.example.graduate_work_team2.entity.Ads;
 import com.example.graduate_work_team2.entity.Image;
 import com.example.graduate_work_team2.entity.User;
+import com.example.graduate_work_team2.mapper.AdsMapper;
 import com.example.graduate_work_team2.repository.AdsRepository;
 import com.example.graduate_work_team2.repository.ImageRepository;
 import com.example.graduate_work_team2.repository.UserRepository;
@@ -32,9 +33,7 @@ import static java.nio.file.StandardOpenOption.CREATE_NEW;
 public class ImageServiceImpl implements ImageService {
     private final ImageRepository imageRepository;
     private final AdsRepository adsRepository;
-
     private final UserRepository userRepository;
-
     private final AdsMapper adsMapper;
 
     @Override
@@ -70,7 +69,7 @@ public class ImageServiceImpl implements ImageService {
             ads.setImage(imageRepository.save(updatedImage));
             adsRepository.save(ads);
         }
-        return adsMapper.toDto(ads);
+        return adsMapper.toAdsDto(ads);
     }
     @Override
     public Image getImageById(long id) {

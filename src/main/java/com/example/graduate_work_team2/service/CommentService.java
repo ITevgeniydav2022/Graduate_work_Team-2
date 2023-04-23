@@ -5,6 +5,7 @@ import com.example.graduate_work_team2.entity.Comment;
 import org.springframework.security.core.Authentication;
 
 import java.util.Collection;
+
 /**
  * Интерфейс сервиса для работы с комментариями
  *
@@ -32,6 +33,7 @@ public interface CommentService {
      * @return возвращает true, если комментарий удалён, иначе false
      */
     boolean deleteComment(long adsId, long comId, Authentication authentication);
+
     /**
      * Метод получения коллекции комментариев у определенного объявления
      *
@@ -49,13 +51,15 @@ public interface CommentService {
      * @return Comment
      */
     CommentDto addAdsComments(long adsId, CommentDto commentDto, Authentication authentication);
-    /**
-     * Метод получения комментария по его айди
-     *
-     * @param id    - айди комментария
-     * @param adsId - айди объявления
-     * @return Comment
-     */
-    CommentDto getAdsComment(long adsId, long id);
+
+//    ????пока возможно и не понадобится
+//    /**
+//     * Метод получения комментария по его айди
+//     *
+//     * @param id    - айди комментария
+//     * @param adsId - айди объявления
+//     * @return Comment
+//     */
+//    CommentDto getAdsComment(long adsId, long id);
 
 }

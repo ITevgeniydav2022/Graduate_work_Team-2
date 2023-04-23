@@ -4,6 +4,7 @@ import com.example.graduate_work_team2.dto.AdsDto;
 import com.example.graduate_work_team2.dto.CommentDto;
 import com.example.graduate_work_team2.dto.CreateAdsDto;
 import com.example.graduate_work_team2.dto.FullAdsDto;
+import com.example.graduate_work_team2.entity.Ads;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -41,13 +42,12 @@ public interface AdsService {
     Collection<AdsDto> getAdsMe(Authentication authentication);
 
     /**
-     * Метод получения объявления по айди объявления и айди комментария
+     * Метод получения объявления по его айди
      *
      * @param adsId - айди объявления
-     * @param comId - айди комментария
-     * @return Comment
+     * @return Ads
      */
-    CommentDto getAdsById(long adsId, long comId);
+    Ads getAdsById(long adsId);
 
     /**
      * Метод получения DTO с полной информацией об объекте
