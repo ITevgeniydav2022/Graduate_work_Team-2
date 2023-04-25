@@ -14,6 +14,7 @@ import com.example.graduate_work_team2.repository.UserRepository;
 import com.example.graduate_work_team2.service.AdsService;
 import com.example.graduate_work_team2.service.ImageService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,7 @@ import java.util.stream.Collectors;
  * Имплементация сервиса для работы с объявлением
  * @author Одокиенко Екатерина
  */
+@Slf4j
 @Transactional
 @RequiredArgsConstructor
 @Service
@@ -55,6 +57,7 @@ public class AdsServiceImpl implements AdsService {
 
     @Override
     public Collection<AdsDto> getAdsMe(Authentication authentication) {
+        log.info("Был вызван метод ");
         User user = userRepository.findByEmail(SecurityContextHolder.getContext()
                 .getAuthentication().getName()).orElseThrow();
         Collection<Ads> adsList = adsRepository.findAllByAuthorId(user.getId());
@@ -74,7 +77,8 @@ public class AdsServiceImpl implements AdsService {
     }
 
     @Override
-    public boolean removeAdsById(Long adsId, Authentication authentication) throws IOException {
+    public boolean removeAdsById(Long adsId, Authentication authentication) {
+        log.info("Был вызван метод удаления объявления по id. ");
         Ads ads = adsRepository.findById(adsId)
                 .orElseThrow(() -> new AdsNotFoundException("Объявление с id " + adsId + " не найдено!"));
         User user = userRepository.findByEmail(authentication.getName()).orElseThrow();
@@ -84,7 +88,12 @@ public class AdsServiceImpl implements AdsService {
                     .map(Comment::getId)
                     .collect(Collectors.toList());
             commentRepository.deleteAllById(adsComments);
-            imageService.removeImage(ads.getImage().getId());
+            try {
+                imageService.removeImage(ads.getImage().getId());
+            } catch (IOException e) {
+                log.error("Ошибка при попытке удаления изображения в объявлении " + e.getMessage());
+                throw new RuntimeException(e);
+            }
             adsRepository.delete(ads);
             return true;
         }
@@ -92,6 +101,7 @@ public class AdsServiceImpl implements AdsService {
     }
     @Override
     public AdsDto updateAds(Long adsId, AdsDto updateAdsDto, Authentication authentication) {
+        log.info("Был вызван метод изменения объявления. ");
         Ads updatedAds = adsRepository.findById(adsId).orElseThrow(() ->
                 new AdsNotFoundException("Объявление с id " + adsId + " не найдено!"));
         User user = userRepository.findByEmail(authentication.getName()).orElseThrow();

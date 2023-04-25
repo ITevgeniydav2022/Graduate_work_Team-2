@@ -9,6 +9,7 @@ import com.example.graduate_work_team2.repository.UserRepository;
 import com.example.graduate_work_team2.service.ImageService;
 import com.example.graduate_work_team2.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,6 +32,7 @@ import static com.example.graduate_work_team2.dto.Role.USER;
  *
  * @author Одокиенко Екатерина
  */
+@Slf4j
 @Transactional
 @RequiredArgsConstructor
 @Service
@@ -91,12 +93,22 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
     }
-    public String updateUserImage(MultipartFile image, Authentication authentication) throws IOException {
+    public String updateUserImage(MultipartFile image, Authentication authentication) {
         User user = getUserByUsername(authentication.getName());
         if (user.getImage() != null) {
-            imageService.removeImage(user.getId());
+            try {
+                imageService.removeImage(user.getId());
+            } catch (IOException e) {
+                log.error("Ошибка при попытке удалить изображение" + e.getMessage());
+                throw new RuntimeException(e);
+            }
         }
-        user.setImage(imageService.uploadImage(image));
+        try {
+            user.setImage(imageService.uploadImage(image));
+        } catch (IOException e) {
+            log.error("Ошибка при попытке загрузить изображение" + e.getMessage());
+            throw new RuntimeException(e);
+        }
         return "/users/image/" + userRepository.save(user).getImage().getId();
     }
     private User getUserByUsername(String username) {

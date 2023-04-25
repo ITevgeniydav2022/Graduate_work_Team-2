@@ -2,6 +2,7 @@ package com.example.graduate_work_team2.service.impl;
 
 import com.example.graduate_work_team2.service.AuthorizationService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,6 +15,7 @@ import javax.transaction.Transactional;
  *
  * @author Одокиенко Екатерина
  */
+@Slf4j
 @Transactional
 @RequiredArgsConstructor
 @Service
@@ -24,6 +26,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 
     @Override
     public boolean login(String username, String password) {
+        log.info("Был вызван метод некоректной попытки введения пароля.");
         UserDetails user = userDetailsService.loadUserByUsername(username);
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new BadCredentialsException("Неверно указан пароль!");

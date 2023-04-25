@@ -12,6 +12,7 @@ import com.example.graduate_work_team2.repository.UserRepository;
 import com.example.graduate_work_team2.service.CommentService;
 import com.example.graduate_work_team2.service.ImageService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ import java.util.Collection;
  * Имплементация сервиса для работы с комментариями
  * @author Одокиенко Екатерина
  */
+@Slf4j
 @Transactional
 @RequiredArgsConstructor
 @Service
@@ -37,6 +39,7 @@ public class CommentServiceImpl implements CommentService {
     private final CommentMapper commentMapper;
     @Override
     public CommentDto updateComment(long adsId, long comId, CommentDto updateComment, Authentication authentication) {
+        log.info("Был вызван метод изменения комментария. ");
         Comment updatedComment = commentRepository.findById(adsId)
                 .orElseThrow(() -> new CommentNotFoundException("Комментарий с id " + adsId + " не найден!"));
         User user = userRepository.findByEmail(authentication.getName()).orElseThrow();
@@ -53,6 +56,7 @@ public class CommentServiceImpl implements CommentService {
     }
     @Override
     public boolean deleteComment(long adsId, long comId, Authentication authentication) {
+        log.info("Был вызван метод удаления комментария. ");
         Comment comment = commentRepository.findById(comId)
                 .orElseThrow(() -> new CommentNotFoundException("Комментарий с id " + comId + " не найден!"));
         User user = userRepository.findByEmail(authentication.getName()).orElseThrow();
@@ -67,6 +71,7 @@ public class CommentServiceImpl implements CommentService {
     }
     @Override
     public CommentDto addAdsComments(long adsId, CommentDto commentDto, Authentication authentication) {
+        log.info("Был вызван метод создания комментария. ");
         User user = userRepository.findByEmail(SecurityContextHolder.getContext()
                 .getAuthentication().getName()).orElseThrow();
         Comment comment = commentMapper.fromCommentDto(commentDto);
@@ -78,6 +83,7 @@ public class CommentServiceImpl implements CommentService {
     }
     @Override
     public Collection<CommentDto> getComments(long adsId) {
+        log.info("Был вызван метод получения всех комментариев по id пользователя. ");
         Collection<Comment> commentList = commentRepository.findAllByAdsId(adsId);
         return commentMapper.toCommentDto(commentList);
     }

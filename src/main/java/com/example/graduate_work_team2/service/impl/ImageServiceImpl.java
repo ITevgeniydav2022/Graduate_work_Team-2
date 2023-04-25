@@ -11,6 +11,7 @@ import com.example.graduate_work_team2.repository.ImageRepository;
 import com.example.graduate_work_team2.repository.UserRepository;
 import com.example.graduate_work_team2.service.ImageService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,6 +29,7 @@ import static java.nio.file.StandardOpenOption.CREATE_NEW;
  *
  * @author Одокиенко Екатерина
  */
+@Slf4j
 @RequiredArgsConstructor
 @Transactional
 @Service
@@ -38,9 +40,14 @@ public class ImageServiceImpl implements ImageService {
     private final AdsMapper adsMapper;
 
     @Override
-    public Image uploadImage(MultipartFile imageFile) throws IOException {
+    public Image uploadImage(MultipartFile imageFile) {
         Image image = new Image();
-        image.setData(imageFile.getBytes());
+        try {
+            image.setData(imageFile.getBytes());
+        } catch (IOException e) {
+            log.error("Ошибка при попытке сохранить изображение. " + e.getMessage());
+            throw new RuntimeException(e);
+        }
         image.setFileSize(imageFile.getSize());
         image.setMediaType(imageFile.getContentType());
         return imageRepository.save(image);
@@ -73,16 +80,22 @@ public class ImageServiceImpl implements ImageService {
     }
     @Override
     public Image getImageById(long id) {
+        log.info("Был вызван метод получения изображения по id пользователя. ");
         return imageRepository.findById(id).orElseThrow(() ->
                 new NotFoundException("Картинка с id " + id + " не найдена!"));
     }
     @Override
-    public void removeImage(long id) throws IOException {
+    public void removeImage(long id) {
         Image images = imageRepository.findById(id).orElseThrow(() ->
                 new NotFoundException("Картинка с id " + id + " не найдена!"));
         Path filePath = Path.of(images.getFilePath());
         images.getAds().setImage(null);
         imageRepository.deleteById(id);
-        Files.deleteIfExists(filePath);
+        try {
+            Files.deleteIfExists(filePath);
+        } catch (IOException e) {
+            log.error("Ошибка удаления изображения" + e.getMessage());
+            throw new RuntimeException(e);
+        }
     }
 }
