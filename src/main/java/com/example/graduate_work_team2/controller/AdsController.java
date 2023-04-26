@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -54,14 +55,16 @@ public class AdsController {
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
                                     schema = @Schema(implementation = AdsDto[].class)
                             )
-                    )
+                    ),
+                    @ApiResponse(responseCode = "400",
+                            description = "Объявления не найдены!")
             }
     )
     @GetMapping
     public ResponseWrapperAds<AdsDto> getAllAds() {
         return ResponseWrapperAds.of(adsService.getAllAds());
     }
-    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
+    @SneakyThrows
     @Operation(summary = "Добавление объявления",
             responses = {
                     @ApiResponse(
@@ -71,7 +74,9 @@ public class AdsController {
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
                                     schema = @Schema(implementation = AdsDto.class)
                             )
-                    )
+                    ),
+                    @ApiResponse(responseCode = "400",
+                            description = "Объявление не найдено!")
             }
     )
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -90,12 +95,13 @@ public class AdsController {
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
                                     schema = @Schema(implementation = AdsDto[].class)
                             )
-                    )
+                    ),
+                    @ApiResponse(responseCode = "400",
+                            description = "Информация об объявлении отсутствует!")
             }
     )
     @GetMapping("/{adsId}")
     public ResponseEntity<FullAdsDto> getFullAdsDto(@PathVariable("adsId") Long adsId) {
-//        return ResponseEntity.ok(adsMapper.toFullAdsDto(adsService.getAdsById(adsId)));
         return ResponseEntity.ok(adsService.getFullAdsDto(adsId));
     }
     @Operation(summary = "Удаление объявления",
@@ -107,7 +113,9 @@ public class AdsController {
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
                                     schema = @Schema(implementation = Ads.class)
                             )
-                    )
+                    ),
+                    @ApiResponse(responseCode = "400",
+                            description = "Объявление не найдено!")
             }
     )
     @DeleteMapping("/{adsId}")
@@ -126,7 +134,9 @@ public class AdsController {
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
                                     schema = @Schema(implementation = AdsDto.class)
                             )
-                    )
+                    ),
+                    @ApiResponse(responseCode = "400",
+                            description = "Информация об объявлении отсутствует!")
             }
     )
     @PatchMapping("/{adsId}")
@@ -148,7 +158,9 @@ public class AdsController {
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
                                     schema = @Schema(implementation = AdsDto[].class)
                             )
-                    )
+                    ),
+                    @ApiResponse(responseCode = "400",
+                            description = "Информация об объявлении отсутствует!")
             }
     )
     @GetMapping("/me")
@@ -164,7 +176,9 @@ public class AdsController {
                                     mediaType = MediaType.MULTIPART_FORM_DATA_VALUE,
                                     schema = @Schema(implementation = AdsDto.class)
                             )
-                    )
+                    ),
+                    @ApiResponse(responseCode = "400",
+                            description = "Объявление не найдено!")
             }
     )
     @PatchMapping(value = "/{adsId}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

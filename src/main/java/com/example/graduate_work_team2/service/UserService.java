@@ -16,8 +16,12 @@ import java.util.Collection;
  * @author Одокиенко Екатерина
  */
 public interface UserService {
-
-
+    /**
+     * Метод получения авторизованного пользователя
+     *
+     * @param authentication - данные авторизации
+     * @return User
+     */
     User getUser(Authentication authentication);
 
     /**

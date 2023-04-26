@@ -43,21 +43,24 @@ public class AdsServiceImpl implements AdsService {
     private final AdsMapper adsMapper;
     @Override
     public Collection<AdsDto> getAllAds() {
+        log.info("Был вызван метод получения всех объявлений");
         return adsMapper.toAdsDto(adsRepository.findAll());
     }
     @Override
     public AdsDto addAds(CreateAdsDto createAdsDto, MultipartFile imageFiles) throws IOException {
+        log.info("Был вызван метод добавления объявления");
         User user = userRepository.findByEmail(SecurityContextHolder.getContext()
                 .getAuthentication().getName()).orElseThrow();
         Ads ads = adsMapper.fromAdsDto(createAdsDto);
         ads.setAuthor(user);
         ads.setImage(imageService.uploadImage(imageFiles));
+        log.info("Объявление добавлено!");
         return adsMapper.toAdsDto(adsRepository.save(ads));
     }
 
     @Override
     public Collection<AdsDto> getAdsMe(Authentication authentication) {
-        log.info("Был вызван метод ");
+        log.info("Был вызван метод авторизованного пользователя");
         User user = userRepository.findByEmail(SecurityContextHolder.getContext()
                 .getAuthentication().getName()).orElseThrow();
         Collection<Ads> adsList = adsRepository.findAllByAuthorId(user.getId());
@@ -66,19 +69,21 @@ public class AdsServiceImpl implements AdsService {
 
     @Override
     public Ads getAdsById(long adsId) {
+        log.info("Был вызван метод получения объявления по айди!");
         return adsRepository.findById(adsId).orElseThrow(() ->
                 new AdsNotFoundException("Объявление с id " + adsId + " не найдено!"));
     }
 
     @Override
     public FullAdsDto getFullAdsDto(long adsId) {
+        log.info("Был вызван метод получения всей информации по объявлению");
         return adsMapper.toFullAdsDto(adsRepository.findById(adsId).
                 orElseThrow(() -> new AdsNotFoundException("Объявление с id " + adsId + " не найдено!")));
     }
 
     @Override
     public boolean removeAdsById(Long adsId, Authentication authentication) {
-        log.info("Был вызван метод удаления объявления по id. ");
+        log.info("Был вызван метод удаления объявления по айди");
         Ads ads = adsRepository.findById(adsId)
                 .orElseThrow(() -> new AdsNotFoundException("Объявление с id " + adsId + " не найдено!"));
         User user = userRepository.findByEmail(authentication.getName()).orElseThrow();
@@ -101,7 +106,7 @@ public class AdsServiceImpl implements AdsService {
     }
     @Override
     public AdsDto updateAds(Long adsId, AdsDto updateAdsDto, Authentication authentication) {
-        log.info("Был вызван метод изменения объявления. ");
+        log.info("Был вызван метод изменения объявления");
         Ads updatedAds = adsRepository.findById(adsId).orElseThrow(() ->
                 new AdsNotFoundException("Объявление с id " + adsId + " не найдено!"));
         User user = userRepository.findByEmail(authentication.getName()).orElseThrow();
@@ -109,6 +114,7 @@ public class AdsServiceImpl implements AdsService {
             updatedAds.setTitle(updateAdsDto.getTitle());
             updatedAds.setPrice(updateAdsDto.getPrice());
             adsRepository.save(updatedAds);
+            log.info("Измененное объявление добавлено!");
             return adsMapper.toAdsDto(updatedAds);
         }
         return updateAdsDto;

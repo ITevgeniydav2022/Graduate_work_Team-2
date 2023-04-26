@@ -30,11 +30,8 @@ import java.util.Collection;
 @RequiredArgsConstructor
 @Service
 public class CommentServiceImpl implements CommentService {
-    private final AdsRepository adsRepository;
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
-    private final ImageService imageService;
-    private final AdsMapper adsMapper;
     private final CommentMapper commentMapper;
     private  final UserService userService;
     private final AdsService adsService;
@@ -91,7 +88,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Collection<CommentDto> getComments(long adsId) {
         log.info("Был вызван метод получения всех комментариев по id пользователя. ");
-        Collection<Comment> commentList = commentRepository.findAllByAdsId(adsId);
+        Collection<Comment> commentList = commentRepository.findAllByAdId(adsId);
         return commentMapper.toCommentDto(commentList);
     }
 

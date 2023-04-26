@@ -26,7 +26,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 
     @Override
     public boolean login(String username, String password) {
-        log.info("Был вызван метод некоректной попытки введения пароля.");
+        log.info("Был вызван метод введения пароля");
         UserDetails user = userDetailsService.loadUserByUsername(username);
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new BadCredentialsException("Неверно указан пароль!");

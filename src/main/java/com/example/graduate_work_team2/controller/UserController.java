@@ -43,7 +43,9 @@ public class UserController {
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
                                     schema = @Schema(implementation = NewPasswordDto.class)
                             )
-                    )
+                    ),
+                    @ApiResponse(responseCode = "400",
+                            description = "Ошибка в создании пароля!")
             }
     )
     @PostMapping("/set_password")
@@ -61,7 +63,9 @@ public class UserController {
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
                                     schema = @Schema(implementation = UserDto.class)
                             )
-                    )
+                    ),
+                    @ApiResponse(responseCode = "400",
+                            description = "Пользователь не найден!")
             }
     )
     @GetMapping("/users/me")
@@ -78,7 +82,9 @@ public class UserController {
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
                                     schema = @Schema(implementation = UserDto.class)
                             )
-                    )
+                    ),
+                    @ApiResponse(responseCode = "400",
+                            description = "Пользователь не найден!")
             }
     )
     @PatchMapping("/users/me")
@@ -95,7 +101,9 @@ public class UserController {
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
                                     schema = @Schema(implementation = UserDto.class)
                             )
-                    )
+                    ),
+                    @ApiResponse(responseCode = "400",
+                            description = "Пользователь не найден!")
             }
     )
     @PatchMapping( "/me/image")

@@ -41,7 +41,9 @@ public class CommentController {
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
                                     schema = @Schema(implementation = CommentDto[].class)
                             )
-                    )
+                    ),
+                    @ApiResponse(responseCode = "400",
+                            description = "Объявление с таким комментарием не найдено!")
             }
     )
     @GetMapping("/{adsId}/comments")
@@ -73,7 +75,9 @@ public class CommentController {
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
                                     schema = @Schema(implementation = CommentDto.class)
                             )
-                    )
+                    ),
+                    @ApiResponse(responseCode = "400",
+                            description = "Объявление с таким комментарием не найдено!")
             }
     )
     @DeleteMapping("/{adsId}/comments/{comId}")
@@ -93,7 +97,9 @@ public class CommentController {
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
                                     schema = @Schema(implementation = CommentDto.class)
                             )
-                    )
+                    ),
+                    @ApiResponse(responseCode = "400",
+                            description = "Объявление с таким комментарием не найдено!")
             }
     )
     @PatchMapping("/{adsId}/comments/{comId}")

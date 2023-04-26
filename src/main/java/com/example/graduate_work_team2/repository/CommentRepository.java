@@ -13,13 +13,12 @@ import java.util.List;
  */
 
 /** Механизм для хранения, извлечения, обновления, удаления и поиска объектов. */
-
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     /**
      * Метод получения списка у объекта класса "Комментарий в объявлении" по айди объявления.
      * @param adsId
      */
-    List<Comment> findAllByAdsId(long adsId);
+    List<Comment> findAllByAdId(Long adsId);
 
 }

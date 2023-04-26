@@ -39,7 +39,9 @@ public class RegistrationController {
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
                                     schema = @Schema(implementation = RegisterReqDto.class)
                             )
-                    )
+                    ),
+                    @ApiResponse(responseCode = "400",
+                            description = "Пользователь не найден!")
             }
     )
     @PostMapping("/register")

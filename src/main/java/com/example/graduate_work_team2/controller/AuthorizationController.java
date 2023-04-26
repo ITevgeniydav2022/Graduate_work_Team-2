@@ -38,7 +38,9 @@ public class AuthorizationController {
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
                                     schema = @Schema(implementation = LoginReqDto.class)
                             )
-                    )
+                    ),
+                    @ApiResponse(responseCode = "400",
+                            description = "Пользователь не найден!")
             }
     )
     @PostMapping("/login")
