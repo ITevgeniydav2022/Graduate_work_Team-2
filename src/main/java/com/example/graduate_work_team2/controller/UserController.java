@@ -98,7 +98,7 @@ public class UserController {
                     )
             }
     )
-    @PatchMapping(value = "/me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PatchMapping( "/me/image")
     public ResponseEntity<String> updateUserImage(@RequestBody MultipartFile image, Authentication authentication) throws IOException {
         return ResponseEntity.ok().body(userService.updateUserImage(image, authentication));
     }

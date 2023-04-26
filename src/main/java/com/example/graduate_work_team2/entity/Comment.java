@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.time.LocalDateTime;
+
 /**
  * Класс сущности "Комментарий"
  *
@@ -26,7 +28,7 @@ public class Comment {
     /**
      * поле - время создания комментария
      */
-    private Instant createdAt;
+    private LocalDateTime createdAt;
     /**
      * поле - текст комментария
      */

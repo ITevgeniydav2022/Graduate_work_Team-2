@@ -1,5 +1,6 @@
 package com.example.graduate_work_team2.service;
 
+import com.example.graduate_work_team2.dto.RegisterReqDto;
 import com.example.graduate_work_team2.entity.User;
 
 /**
@@ -8,7 +9,7 @@ import com.example.graduate_work_team2.entity.User;
  */
 public interface RegistrationService {
     /**
-     * @param user - объект класса "Пользователь"
+     * @param registerReqDto - объект Dto зарегистрированного пользователя
      */
-    void register(User user);
+    boolean register(RegisterReqDto registerReqDto);
 }

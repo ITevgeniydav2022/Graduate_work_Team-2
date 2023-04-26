@@ -17,14 +17,16 @@ import java.util.Collection;
  */
 public interface UserService {
 
-//позже доделаю
-//    /**
-//     * Метод создания пользователя
-//     *
-//     * @param createUserDto - объект класса "Пользователь" для передачи данных
-//     * @return User
-//     */
-//    UserDto createUser(CreateUserDto createUserDto);
+
+    User getUser(Authentication authentication);
+
+    /**
+     * Метод создания пользователя
+     *
+     * @param createUserDto - объект класса "Пользователь" для передачи данных
+     * @return User
+     */
+    UserDto createUser(CreateUserDto createUserDto);
 
     /**
      * Метод получения коллекции всех существующих пользователей

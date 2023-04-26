@@ -44,7 +44,7 @@ public class Ads {
     /**
      * поле - фото в объявлении
      */
-    @OneToOne()
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn()
     private Image image;
 

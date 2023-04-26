@@ -50,7 +50,7 @@ public interface CommentService {
      * @param authentication - данные аутентификации
      * @return Comment
      */
-    CommentDto addAdsComments(long adsId, CommentDto commentDto, Authentication authentication);
+    Comment addAdsComments(long adsId, CommentDto commentDto, Authentication authentication);
 
 //    ????пока возможно и не понадобится
 //    /**

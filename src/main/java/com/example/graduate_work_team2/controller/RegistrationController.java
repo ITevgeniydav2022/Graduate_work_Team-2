@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -43,8 +44,10 @@ public class RegistrationController {
     )
     @PostMapping("/register")
     public ResponseEntity<Void> register(@Valid @RequestBody RegisterReqDto req) {
-       registrationService.register(userMapper.toEntity(req));
-
-        return ResponseEntity.ok().build();
+        if (registrationService.register(req)) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 }

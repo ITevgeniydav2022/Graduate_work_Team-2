@@ -9,17 +9,16 @@ import com.example.graduate_work_team2.mapper.CommentMapper;
 import com.example.graduate_work_team2.repository.AdsRepository;
 import com.example.graduate_work_team2.repository.CommentRepository;
 import com.example.graduate_work_team2.repository.UserRepository;
+import com.example.graduate_work_team2.service.AdsService;
 import com.example.graduate_work_team2.service.CommentService;
 import com.example.graduate_work_team2.service.ImageService;
+import com.example.graduate_work_team2.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.webjars.NotFoundException;
 
 import javax.transaction.Transactional;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Collection;
 /**
@@ -37,6 +36,8 @@ public class CommentServiceImpl implements CommentService {
     private final ImageService imageService;
     private final AdsMapper adsMapper;
     private final CommentMapper commentMapper;
+    private  final UserService userService;
+    private final AdsService adsService;
     @Override
     public CommentDto updateComment(long adsId, long comId, CommentDto updateComment, Authentication authentication) {
         log.info("Был вызван метод изменения комментария. ");
@@ -70,16 +71,22 @@ public class CommentServiceImpl implements CommentService {
         return false;
     }
     @Override
-    public CommentDto addAdsComments(long adsId, CommentDto commentDto, Authentication authentication) {
+    public Comment addAdsComments(long adsId, CommentDto commentDto, Authentication authentication) {
         log.info("Был вызван метод создания комментария. ");
-        User user = userRepository.findByEmail(SecurityContextHolder.getContext()
-                .getAuthentication().getName()).orElseThrow();
+//        User user = userRepository.findByEmail(SecurityContextHolder.getContext()
+//                .getAuthentication().getName()).orElseThrow();
+//        Comment comment = commentMapper.fromCommentDto(commentDto);
+//        comment.setAuthor(user);
+//        comment.setAd(adsRepository.findById(adsId).orElseThrow());
+//        comment.setCreatedAt(LocalDateTime.now());
+//        commentRepository.save(comment);
+//        return commentMapper.toCommentDto(comment);
         Comment comment = commentMapper.fromCommentDto(commentDto);
+        User user=userService.getUser(authentication);
         comment.setAuthor(user);
-        comment.setAd(adsRepository.findById(adsId).orElseThrow());
-        comment.setCreatedAt(Instant.from(LocalDateTime.now()));
-        commentRepository.save(comment);
-        return commentMapper.toCommentDto(comment);
+        comment.setAd(adsService.getAdsById(adsId));
+        comment.setCreatedAt(LocalDateTime.now());
+        return commentRepository.save(comment);
     }
     @Override
     public Collection<CommentDto> getComments(long adsId) {
@@ -87,16 +94,5 @@ public class CommentServiceImpl implements CommentService {
         Collection<Comment> commentList = commentRepository.findAllByAdsId(adsId);
         return commentMapper.toCommentDto(commentList);
     }
-//    @Override
-//    public CommentDto getAdsComment(long adsId, long id) {
-//        User user = userRepository.findByEmail(SecurityContextHolder.getContext()
-//                .getAuthentication().getName()).orElseThrow();
-//        Comment comment = commentMapper.fromCommentDto(new CommentDto());
-//        comment.setAuthor(user);
-//        comment.setAd(adsRepository.findById(adsId).orElseThrow());
-//        comment.setCreatedAt(Instant.from(LocalDateTime.now()));
-//        commentRepository.save(comment);
-//        return commentMapper.toCommentDto(comment);
-//    }
 
 }

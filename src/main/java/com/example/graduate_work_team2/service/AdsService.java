@@ -6,6 +6,7 @@ import com.example.graduate_work_team2.dto.CreateAdsDto;
 import com.example.graduate_work_team2.dto.FullAdsDto;
 import com.example.graduate_work_team2.entity.Ads;
 import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -16,6 +17,7 @@ import java.util.Collection;
  *
  * @author Одокиенко Екатерина
  */
+
 public interface AdsService {
     /**
      * Метод добавления объявления

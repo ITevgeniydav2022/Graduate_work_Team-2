@@ -95,7 +95,8 @@ public class AdsController {
     )
     @GetMapping("/{adsId}")
     public ResponseEntity<FullAdsDto> getFullAdsDto(@PathVariable("adsId") Long adsId) {
-        return ResponseEntity.ok(adsMapper.toFullAdsDto(adsService.getAdsById(adsId)));
+//        return ResponseEntity.ok(adsMapper.toFullAdsDto(adsService.getAdsById(adsId)));
+        return ResponseEntity.ok(adsService.getFullAdsDto(adsId));
     }
     @Operation(summary = "Удаление объявления",
             responses = {

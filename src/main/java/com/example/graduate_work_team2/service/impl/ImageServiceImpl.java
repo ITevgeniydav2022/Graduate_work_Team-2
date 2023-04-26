@@ -21,9 +21,6 @@ import javax.transaction.Transactional;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
-import static java.nio.file.StandardOpenOption.CREATE_NEW;
-
 /**
  * Имплементация сервиса для работы с фото в объявлении
  *
@@ -61,15 +58,22 @@ public class ImageServiceImpl implements ImageService {
         if (ads.getAuthor().getEmail().equals(user.getEmail()) || user.getRole().getAuthority().equals("ADMIN")) {
             Image updatedImage = imageRepository.findByAdsId(adsId);
             Path filePath = Path.of(updatedImage.getFilePath());
+//            уточнить, правильно ли сохранение файла???????
+            byte[] data = updatedImage.getData();
             Files.deleteIfExists(filePath);
-            try (
-                    InputStream is = imageFile.getInputStream();
-                    OutputStream os = Files.newOutputStream(filePath, CREATE_NEW);
-                    BufferedInputStream bis = new BufferedInputStream(is, 1024);
-                    BufferedOutputStream bos = new BufferedOutputStream(os, 1024)
-            ) {
-                bis.transferTo(bos);
+            try {
+                Files.write(filePath, data);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+//            try (Files.write(filePath,imageFile.getBytes(),))
+//                    InputStream is = imageFile.getInputStream();
+//                    OutputStream os = Files.newOutputStream(filePath, CREATE_NEW);
+//                    BufferedInputStream bis = new BufferedInputStream(is, 1024);
+//                    BufferedOutputStream bos = new BufferedOutputStream(os, 1024)
+//            ) {
+////                bis.transferTo(bos);
+//            }
             updatedImage.setFileSize(imageFile.getSize());
             updatedImage.setMediaType(imageFile.getContentType());
             updatedImage.setData(imageFile.getBytes());
@@ -78,12 +82,14 @@ public class ImageServiceImpl implements ImageService {
         }
         return adsMapper.toAdsDto(ads);
     }
+
     @Override
     public Image getImageById(long id) {
         log.info("Был вызван метод получения изображения по id пользователя. ");
         return imageRepository.findById(id).orElseThrow(() ->
                 new NotFoundException("Картинка с id " + id + " не найдена!"));
     }
+
     @Override
     public void removeImage(long id) {
         Image images = imageRepository.findById(id).orElseThrow(() ->

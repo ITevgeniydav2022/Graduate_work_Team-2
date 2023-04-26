@@ -4,6 +4,7 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -37,27 +38,20 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http)  {
-        try {
-            http
-                    .csrf().disable()
-                    .authorizeHttpRequests((authz) ->
-                            authz
-                                    .mvcMatchers(AUTH_WHITELIST).permitAll()
-                                    .mvcMatchers("/ads/**", "/users/**").authenticated()
-                    )
-                    .cors().disable()
-                    .httpBasic(withDefaults());
-        } catch (Exception e) {
-            log.error("Error occurred " + e.getMessage());
-            throw new RuntimeException(e);
-        }
-        try {
-            return http.build();
-        } catch (Exception e) {
-            log.error("Error occurred " + e.getMessage());
-            throw new RuntimeException(e);
-        }
+    public SecurityFilterChain filterChain(HttpSecurity http)  throws Exception{
+           return http
+                   .cors()
+                   .and()
+                   .csrf().disable()
+                   .authorizeHttpRequests((authz) ->
+                           authz
+                                   .mvcMatchers(HttpMethod.GET, "/ads").permitAll()
+                                   .mvcMatchers(HttpMethod.GET, "/ads/images/**").permitAll()
+                                   .mvcMatchers(AUTH_WHITELIST).permitAll()
+                                   .mvcMatchers("/ads/**", "/users/**").authenticated()
+                   )
+                   .httpBasic(withDefaults())
+                   .build();
     }
     @Bean
     public PasswordEncoder passwordEncoder() {

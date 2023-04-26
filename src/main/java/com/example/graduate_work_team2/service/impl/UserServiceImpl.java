@@ -37,24 +37,26 @@ import static com.example.graduate_work_team2.dto.Role.USER;
 @RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
+    private final User user;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
     private final ImageService imageService;
-
-//позже будет дорабатываться
-//    @Override
-//    public UserDto createUser(CreateUserDto createUserDto) {
-//        if (userRepository.existsByEmail(user.getEmail())) {
-//
-//            throw new ValidationException(String.format("Пользователь \"%s\" уже существует!", user.getEmail()));
-//        }
-//        User createdUser = userMapper.createUserDtoToEntity(createUserDto);
-//        if (createdUser.getRole() == null) {
-//            createdUser.setRole(USER);
-//        }
-//        return userMapper.toDtoRegReq(userRepository.save(createdUser));
-//    }
+    @Override
+    public User getUser(Authentication authentication) {
+        return getUserByUsername(authentication.getName());
+    }
+    @Override
+    public UserDto createUser(CreateUserDto createUserDto) {
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new ValidationException(String.format("Пользователь \"%s\" уже существует!", user.getEmail()));
+        }
+        User createdUser = userMapper.createUserDtoToEntity(createUserDto);
+        if (createdUser.getRole() == null) {
+            createdUser.setRole(USER);
+        }
+        return userMapper.toUserDto(userRepository.save(createdUser));
+    }
 
     @Override
     public Collection<UserDto> getUsers() {

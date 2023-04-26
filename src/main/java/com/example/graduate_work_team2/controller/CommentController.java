@@ -2,6 +2,7 @@ package com.example.graduate_work_team2.controller;
 
 import com.example.graduate_work_team2.dto.CommentDto;
 import com.example.graduate_work_team2.dto.ResponseWrapperComment;
+import com.example.graduate_work_team2.entity.Comment;
 import com.example.graduate_work_team2.service.CommentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -16,6 +17,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 /**
  * Класс контроллера объекта "Комментарий"
@@ -59,8 +61,8 @@ public class CommentController {
             }
     )
     @PostMapping("/{adsId}/comments")
-    public CommentDto addAdsComments(@PathVariable long adsId, @RequestBody CommentDto commentDto, Authentication authentication) {
-        return commentService.addAdsComments(adsId, commentDto, authentication);
+    public Comment addAdsComments(@PathVariable long adsId, @RequestBody @Valid CommentDto commentDto, Authentication authentication) {
+        return commentService.addAdsComments(adsId,commentDto,authentication);
     }
     @Operation(summary = "Удалить комментарий",
             responses = {
