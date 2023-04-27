@@ -37,7 +37,6 @@ import static com.example.graduate_work_team2.dto.Role.USER;
 @RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
-//    private final User user; - не создается бин!!!!!
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
@@ -49,10 +48,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto createUser(CreateUserDto createUserDto) {
         log.info("Был вызван метод создания пользователя");
-//     !!!   ошибка - не создается бин!!!!!Не знаю как тогда осуществить проверку????
-//        if (userRepository.existsByEmail(user.getEmail())) {
-//            throw new ValidationException(String.format("Пользователь \"%s\" уже существует!", user.getEmail()));
-//        }
+        if (userRepository.existsByEmail(createUserDto.getEmail())) {
+            throw new ValidationException(String.format("Пользователь \"%s\" уже существует!", createUserDto.getEmail()));
+        }
         User createdUser = userMapper.createUserDtoToEntity(createUserDto);
         if (createdUser.getRole() == null) {
             createdUser.setRole(USER);
