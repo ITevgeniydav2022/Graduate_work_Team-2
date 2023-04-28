@@ -46,6 +46,7 @@ public class CommentController {
                             description = "Объявление с таким комментарием не найдено!")
             }
     )
+    /**Метод возвращает комментарии к объявлению**/
     @GetMapping("/{adsId}/comments")
     public ResponseWrapperComment<CommentDto> getAdsComments(@PathVariable long adsId) {
         return ResponseWrapperComment.of(commentService.getComments(adsId));
@@ -62,6 +63,7 @@ public class CommentController {
                     )
             }
     )
+    /**Метод добавляет комментарии к объявлению**/
     @PostMapping("/{adsId}/comments")
     public Comment addAdsComments(@PathVariable long adsId, @RequestBody @Valid CommentDto commentDto, Authentication authentication) {
         return commentService.addAdsComments(adsId,commentDto,authentication);
@@ -80,6 +82,7 @@ public class CommentController {
                             description = "Объявление с таким комментарием не найдено!")
             }
     )
+    /**Метод удаляет комментарии к объявлению**/
     @DeleteMapping("/{adsId}/comments/{comId}")
     public ResponseEntity<HttpStatus> deleteComment(@PathVariable long adsId, @PathVariable long comId,
                                                        Authentication authentication) {
@@ -102,6 +105,7 @@ public class CommentController {
                             description = "Объявление с таким комментарием не найдено!")
             }
     )
+    /**Метод обновляет комментарии к объявлению**/
     @PatchMapping("/{adsId}/comments/{comId}")
     public ResponseEntity<CommentDto> updateComment(@PathVariable long adsId, @PathVariable long comId,
                                                           @RequestBody CommentDto updateCommentDto,

@@ -44,6 +44,7 @@ public class RegistrationController {
                             description = "Пользователь не найден!")
             }
     )
+    /**Метод регистрации пользователя**/
     @PostMapping("/register")
     public ResponseEntity<Void> register(@Valid @RequestBody RegisterReqDto req) {
         if (registrationService.register(req)) {

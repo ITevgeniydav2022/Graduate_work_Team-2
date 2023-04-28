@@ -43,6 +43,7 @@ public class AuthorizationController {
                             description = "Пользователь не найден!")
             }
     )
+    /**Метод авторизации зарегистрированного пользователя**/
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginReqDto req) {
         if (authorizationService.login(req.getUsername(), req.getPassword())) {

@@ -60,6 +60,7 @@ public class AdsController {
                             description = "Объявления не найдены!")
             }
     )
+    /**Метод выводит все объявления**/
     @GetMapping
     public ResponseWrapperAds<AdsDto> getAllAds() {
         return ResponseWrapperAds.of(adsService.getAllAds());
@@ -79,6 +80,7 @@ public class AdsController {
                             description = "Объявление не найдено!")
             }
     )
+    /**Метод добавляет объявление**/
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<AdsDto> addAds(@Parameter(in = ParameterIn.DEFAULT, description = "Данные нового объявления",
             required = true, schema = @Schema())
@@ -100,6 +102,7 @@ public class AdsController {
                             description = "Информация об объявлении отсутствует!")
             }
     )
+    /**Метод вывод всю имеющуюся информацию по объявлению по id**/
     @GetMapping("/{adsId}")
     public ResponseEntity<FullAdsDto> getFullAdsDto(@PathVariable("adsId") Long adsId) {
         return ResponseEntity.ok(adsService.getFullAdsDto(adsId));
@@ -118,6 +121,7 @@ public class AdsController {
                             description = "Объявление не найдено!")
             }
     )
+    /**Метод удаляет объявление по id**/
     @DeleteMapping("/{adsId}")
     public ResponseEntity<HttpStatus> removeAds(@PathVariable long adsId, Authentication authentication) throws IOException {
         if (adsService.removeAdsById(adsId, authentication)) {
@@ -139,6 +143,7 @@ public class AdsController {
                             description = "Информация об объявлении отсутствует!")
             }
     )
+    /**Метод вносит изменения в объявление по id**/
     @PatchMapping("/{adsId}")
     public ResponseEntity<AdsDto> updateAds(@PathVariable long adsId,
                                             @RequestBody AdsDto updatedAdsDto,Authentication authentication) {
@@ -163,6 +168,7 @@ public class AdsController {
                             description = "Информация об объявлении отсутствует!")
             }
     )
+    /**Метод выводит все объявления пользователя**/
     @GetMapping("/me")
     public ResponseWrapperAds<AdsDto> getAdsMe(Authentication authentication) {
         return ResponseWrapperAds.of(adsService.getAdsMe(authentication));
@@ -181,6 +187,7 @@ public class AdsController {
                             description = "Объявление не найдено!")
             }
     )
+    /**Метод изменяет изображение в объявлении по id**/
     @PatchMapping(value = "/{adsId}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<AdsDto> updateAdsImage(@PathVariable long adsId, Authentication authentication,
                                                  @Parameter(in = ParameterIn.DEFAULT, description = "Загрузите сюда новое изображение",

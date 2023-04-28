@@ -19,6 +19,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Configuration
 public class WebSecurityConfig {
 
+    /**Список аутентификаций **/
     private static final String[] AUTH_WHITELIST = {
             "/swagger-resources/**",
             "/swagger-ui.html",
@@ -27,6 +28,7 @@ public class WebSecurityConfig {
             "/login", "/register"
     };
 
+    /**Диспетчер сведений о пользователе в памяти**/
     @Bean
     public InMemoryUserDetailsManager userDetailsService() {
         UserDetails user = User.withDefaultPasswordEncoder()
@@ -37,6 +39,7 @@ public class WebSecurityConfig {
         return new InMemoryUserDetailsManager(user);
     }
 
+    /**Цепочка фильтров безопасности**/
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http)  throws Exception{
            return http
@@ -53,6 +56,8 @@ public class WebSecurityConfig {
                    .httpBasic(withDefaults())
                    .build();
     }
+
+    /**Кодировщик паролей Spring security**/
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

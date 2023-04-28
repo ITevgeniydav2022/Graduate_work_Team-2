@@ -7,19 +7,32 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-
+ /**Класс, оптсывающий параметры пользователя**/
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDto {
 
+    /**id пользователя**/
     private int id;
+
+    /**логин пользователя**/
     private String email;
+
+    /**имя пользователя**/
     private String firstName;
+
+    /**фамилия пользователя**/
     private String lastName;
+
+    /**телефон пользователя**/
     private String phone;
+
+    /**дата регистрации пользователя**/
     @JsonIgnore
     private String regDate = String.valueOf(LocalDateTime.now());
+
+    /**ссылка на аватар пользователя**/
     private String image;
 
 

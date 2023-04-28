@@ -48,6 +48,7 @@ public class UserController {
                             description = "Ошибка в создании пароля!")
             }
     )
+    /**Метод изменения пароля**/
     @PostMapping("/set_password")
     public ResponseEntity<NewPasswordDto> setPassword(@Valid @RequestBody NewPasswordDto newPasswordDto) {
         userService.updatePassword(newPasswordDto.getNewPassword(), newPasswordDto.getCurrentPassword());
@@ -68,6 +69,7 @@ public class UserController {
                             description = "Пользователь не найден!")
             }
     )
+    /**Метод возвращает информацию о пользователе**/
     @GetMapping("/users/me")
     public ResponseEntity<UserDto> getUser(Authentication authentication) {
         return ResponseEntity.ok(userService.getUserMe(authentication));
@@ -106,6 +108,7 @@ public class UserController {
                             description = "Пользователь не найден!")
             }
     )
+    /**Метод получает изображение и авторизацию пользователя, возвращает обновленный аватар пользователя**/
     @PatchMapping( "/me/image")
     public ResponseEntity<String> updateUserImage(@RequestBody MultipartFile image, Authentication authentication) throws IOException {
         return ResponseEntity.ok().body(userService.updateUserImage(image, authentication));
