@@ -8,7 +8,6 @@ public class FullAdsDto {
     /**id объявления**/
     private int pk;
 
-
     /**имя автора объявления**/
     private String authorFirstName;
 

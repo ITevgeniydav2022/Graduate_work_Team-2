@@ -32,7 +32,7 @@ import javax.validation.Valid;
 public class CommentController {
     private final CommentService commentService;
 
-    @Operation(summary = "Просмотр комментариев к объявлению",
+    @Operation(summary = "Получить комментарии объявления",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -42,11 +42,10 @@ public class CommentController {
                                     schema = @Schema(implementation = CommentDto[].class)
                             )
                     ),
-                    @ApiResponse(responseCode = "400",
-                            description = "Объявление с таким комментарием не найдено!")
+                    @ApiResponse(responseCode = "401",description = "Ошибочный ввод имени и/или пароля", content = @Content())
             }
     )
-    /**Метод возвращает комментарии к объявлению**/
+
     @GetMapping("/{adsId}/comments")
     public ResponseWrapperComment<CommentDto> getAdsComments(@PathVariable long adsId) {
         return ResponseWrapperComment.of(commentService.getComments(adsId));
@@ -63,7 +62,7 @@ public class CommentController {
                     )
             }
     )
-    /**Метод добавляет комментарии к объявлению**/
+
     @PostMapping("/{adsId}/comments")
     public Comment addAdsComments(@PathVariable long adsId, @RequestBody @Valid CommentDto commentDto, Authentication authentication) {
         return commentService.addAdsComments(adsId,commentDto,authentication);
@@ -78,11 +77,11 @@ public class CommentController {
                                     schema = @Schema(implementation = CommentDto.class)
                             )
                     ),
-                    @ApiResponse(responseCode = "400",
-                            description = "Объявление с таким комментарием не найдено!")
+                    @ApiResponse(responseCode = "401",description = "Ошибочный ввод имени и/или пароля", content = @Content()),
+                    @ApiResponse(responseCode = "403",description = "Доступ к запрошенному ресурсу запрещен", content = @Content())
             }
     )
-    /**Метод удаляет комментарии к объявлению**/
+
     @DeleteMapping("/{adsId}/comments/{comId}")
     public ResponseEntity<HttpStatus> deleteComment(@PathVariable long adsId, @PathVariable long comId,
                                                        Authentication authentication) {
@@ -101,11 +100,11 @@ public class CommentController {
                                     schema = @Schema(implementation = CommentDto.class)
                             )
                     ),
-                    @ApiResponse(responseCode = "400",
-                            description = "Объявление с таким комментарием не найдено!")
+                    @ApiResponse(responseCode = "401",description = "Ошибочный ввод имени и/или пароля", content = @Content()),
+                    @ApiResponse(responseCode = "403",description = "Доступ к запрошенному ресурсу запрещен", content = @Content())
             }
     )
-    /**Метод обновляет комментарии к объявлению**/
+
     @PatchMapping("/{adsId}/comments/{comId}")
     public ResponseEntity<CommentDto> updateComment(@PathVariable long adsId, @PathVariable long comId,
                                                           @RequestBody CommentDto updateCommentDto,

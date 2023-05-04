@@ -33,7 +33,7 @@ public class RegistrationController {
     @Operation(summary = "Регистрация пользователя",
             responses = {
                     @ApiResponse(
-                            responseCode = "200",
+                            responseCode = "201",
                             description = "Зарегистрированный пользователь",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
@@ -44,7 +44,7 @@ public class RegistrationController {
                             description = "Пользователь не найден!")
             }
     )
-    /**Метод регистрации пользователя**/
+
     @PostMapping("/register")
     public ResponseEntity<Void> register(@Valid @RequestBody RegisterReqDto req) {
         if (registrationService.register(req)) {

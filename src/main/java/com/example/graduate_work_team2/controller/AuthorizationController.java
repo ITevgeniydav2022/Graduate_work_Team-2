@@ -39,11 +39,10 @@ public class AuthorizationController {
                                     schema = @Schema(implementation = LoginReqDto.class)
                             )
                     ),
-                    @ApiResponse(responseCode = "400",
-                            description = "Пользователь не найден!")
+                    @ApiResponse(responseCode = "401", description = "Для доступа к запрашиваемому ресурсу требуется аутентификация", content = @Content())
             }
     )
-    /**Метод авторизации зарегистрированного пользователя**/
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginReqDto req) {
         if (authorizationService.login(req.getUsername(), req.getPassword())) {

@@ -55,32 +55,29 @@ public class AdsController {
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
                                     schema = @Schema(implementation = AdsDto[].class)
                             )
-                    ),
-                    @ApiResponse(responseCode = "400",
-                            description = "Объявления не найдены!")
+                    )
             }
     )
-    /**Метод выводит все объявления**/
+
     @GetMapping
     public ResponseWrapperAds<AdsDto> getAllAds() {
         return ResponseWrapperAds.of(adsService.getAllAds());
     }
     @SneakyThrows
-    @Operation(summary = "Добавление объявления",
+    @Operation(summary = "Добавить объявление",
             responses = {
                     @ApiResponse(
-                            responseCode = "200",
+                            responseCode = "201",
                             description = "Добавленное объявление",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
                                     schema = @Schema(implementation = AdsDto.class)
                             )
                     ),
-                    @ApiResponse(responseCode = "400",
-                            description = "Объявление не найдено!")
+                    @ApiResponse(responseCode = "401", description = "Для доступа к запрашиваемому ресурсу требуется аутентификация", content = @Content())
             }
     )
-    /**Метод добавляет объявление**/
+
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<AdsDto> addAds(@Parameter(in = ParameterIn.DEFAULT, description = "Данные нового объявления",
             required = true, schema = @Schema())
@@ -98,30 +95,22 @@ public class AdsController {
                                     schema = @Schema(implementation = AdsDto[].class)
                             )
                     ),
-                    @ApiResponse(responseCode = "400",
-                            description = "Информация об объявлении отсутствует!")
+                    @ApiResponse(responseCode = "401", description = "Для доступа к запрашиваемому ресурсу требуется аутентификация", content = @Content())
             }
     )
-    /**Метод вывод всю имеющуюся информацию по объявлению по id**/
+
     @GetMapping("/{adsId}")
     public ResponseEntity<FullAdsDto> getFullAdsDto(@PathVariable("adsId") Long adsId) {
         return ResponseEntity.ok(adsService.getFullAdsDto(adsId));
     }
     @Operation(summary = "Удаление объявления",
             responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Удаленное объявление",
-                            content = @Content(
-                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = Ads.class)
-                            )
-                    ),
-                    @ApiResponse(responseCode = "400",
-                            description = "Объявление не найдено!")
+                    @ApiResponse(responseCode = "204", description = "Были переданы только заголовки без тела сообщения", content = @Content()),
+                    @ApiResponse(responseCode = "401", description = "Для доступа к запрашиваемому ресурсу требуется аутентификация", content = @Content()),
+                    @ApiResponse(responseCode = "403", description = "Доступ к запрошенному ресурсу запрещен", content = @Content())
             }
     )
-    /**Метод удаляет объявление по id**/
+
     @DeleteMapping("/{adsId}")
     public ResponseEntity<HttpStatus> removeAds(@PathVariable long adsId, Authentication authentication) throws IOException {
         if (adsService.removeAdsById(adsId, authentication)) {
@@ -129,7 +118,7 @@ public class AdsController {
         }
         return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).build();
     }
-    @Operation(summary = "Изменение объявления",
+    @Operation(summary = "Обновить информацию об объявлении",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -139,11 +128,11 @@ public class AdsController {
                                     schema = @Schema(implementation = AdsDto.class)
                             )
                     ),
-                    @ApiResponse(responseCode = "400",
-                            description = "Информация об объявлении отсутствует!")
+                    @ApiResponse(responseCode = "401", description = "Для доступа к запрашиваемому ресурсу требуется аутентификация", content = @Content()),
+                    @ApiResponse(responseCode = "403", description = "Доступ к запрошенному ресурсу запрещен", content = @Content())
             }
     )
-    /**Метод вносит изменения в объявление по id**/
+
     @PatchMapping("/{adsId}")
     public ResponseEntity<AdsDto> updateAds(@PathVariable long adsId,
                                             @RequestBody AdsDto updatedAdsDto,Authentication authentication) {
@@ -154,7 +143,7 @@ public class AdsController {
         }
         return ResponseEntity.ok(updateAdsDto);
     }
-    @Operation(summary = "Просмотр всех объявлений авторизованного пользователя",
+    @Operation(summary = "Получить объявления авторизованного пользователя",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -164,16 +153,15 @@ public class AdsController {
                                     schema = @Schema(implementation = AdsDto[].class)
                             )
                     ),
-                    @ApiResponse(responseCode = "400",
-                            description = "Информация об объявлении отсутствует!")
+                    @ApiResponse(responseCode = "401", description = "Для доступа к запрашиваемому ресурсу требуется аутентификация", content = @Content())
             }
     )
-    /**Метод выводит все объявления пользователя**/
+
     @GetMapping("/me")
     public ResponseWrapperAds<AdsDto> getAdsMe(Authentication authentication) {
         return ResponseWrapperAds.of(adsService.getAdsMe(authentication));
     }
-    @Operation(summary = "Редактирование фото в объявлении",
+    @Operation(summary = "Обновить картинку объявления",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -183,11 +171,11 @@ public class AdsController {
                                     schema = @Schema(implementation = AdsDto.class)
                             )
                     ),
-                    @ApiResponse(responseCode = "400",
-                            description = "Объявление не найдено!")
+                    @ApiResponse(responseCode = "401", description = "Для доступа к запрашиваемому ресурсу требуется аутентификация", content = @Content()),
+                    @ApiResponse(responseCode = "403", description = "Доступ к запрошенному ресурсу запрещен", content = @Content())
             }
     )
-    /**Метод изменяет изображение в объявлении по id**/
+
     @PatchMapping(value = "/{adsId}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<AdsDto> updateAdsImage(@PathVariable long adsId, Authentication authentication,
                                                  @Parameter(in = ParameterIn.DEFAULT, description = "Загрузите сюда новое изображение",

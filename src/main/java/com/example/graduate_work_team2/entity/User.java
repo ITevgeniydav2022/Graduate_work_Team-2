@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.time.LocalDateTime;
+
 /**
  * Класс сущности "Пользователь"
  *
@@ -52,7 +54,7 @@ public class User {
     /**
      * поле - дата регистрации пользователя
      */
-    private Instant regDate;
+    private LocalDateTime regDate;
     /**
      * поле - объект сущности "Фото"
      */

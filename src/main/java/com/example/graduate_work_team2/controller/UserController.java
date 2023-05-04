@@ -44,11 +44,11 @@ public class UserController {
                                     schema = @Schema(implementation = NewPasswordDto.class)
                             )
                     ),
-                    @ApiResponse(responseCode = "400",
-                            description = "Ошибка в создании пароля!")
+                    @ApiResponse(responseCode = "401",description = "Ошибочный ввод имени и/или пароля", content = @Content()),
+                    @ApiResponse(responseCode = "403",description = "Доступ к запрошенному ресурсу запрещен", content = @Content())
             }
     )
-    /**Метод изменения пароля**/
+
     @PostMapping("/set_password")
     public ResponseEntity<NewPasswordDto> setPassword(@Valid @RequestBody NewPasswordDto newPasswordDto) {
         userService.updatePassword(newPasswordDto.getNewPassword(), newPasswordDto.getCurrentPassword());
@@ -65,11 +65,10 @@ public class UserController {
                                     schema = @Schema(implementation = UserDto.class)
                             )
                     ),
-                    @ApiResponse(responseCode = "400",
-                            description = "Пользователь не найден!")
+                    @ApiResponse(responseCode = "401", description = "Для доступа к запрашиваемому ресурсу требуется аутентификация", content = @Content())
             }
     )
-    /**Метод возвращает информацию о пользователе**/
+
     @GetMapping("/users/me")
     public ResponseEntity<UserDto> getUser(Authentication authentication) {
         return ResponseEntity.ok(userService.getUserMe(authentication));
@@ -85,8 +84,7 @@ public class UserController {
                                     schema = @Schema(implementation = UserDto.class)
                             )
                     ),
-                    @ApiResponse(responseCode = "400",
-                            description = "Пользователь не найден!")
+                    @ApiResponse(responseCode = "401", description = "Для доступа к запрашиваемому ресурсу требуется аутентификация", content = @Content())
             }
     )
     @PatchMapping("/users/me")
@@ -104,11 +102,10 @@ public class UserController {
                                     schema = @Schema(implementation = UserDto.class)
                             )
                     ),
-                    @ApiResponse(responseCode = "400",
-                            description = "Пользователь не найден!")
+                    @ApiResponse(responseCode = "401", description = "Для доступа к запрашиваемому ресурсу требуется аутентификация", content = @Content())
             }
     )
-    /**Метод получает изображение и авторизацию пользователя, возвращает обновленный аватар пользователя**/
+
     @PatchMapping( "/me/image")
     public ResponseEntity<String> updateUserImage(@RequestBody MultipartFile image, Authentication authentication) throws IOException {
         return ResponseEntity.ok().body(userService.updateUserImage(image, authentication));
