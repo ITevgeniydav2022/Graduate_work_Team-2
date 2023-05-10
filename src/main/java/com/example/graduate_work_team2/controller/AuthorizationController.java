@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import com.example.graduate_work_team2.dto.LoginReqDto;
  *
  * @author Одокиенко Екатерина
  */
+@Slf4j
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
 @RequiredArgsConstructor
@@ -45,10 +47,8 @@ public class AuthorizationController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginReqDto req) {
-        if (authorizationService.login(req.getUsername(), req.getPassword())) {
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
+        log.info("Запрос на авторизацию пользователя");
+        authorizationService.login(req.getUsername(), req.getPassword());
+        return ResponseEntity.ok().build();
     }
 }

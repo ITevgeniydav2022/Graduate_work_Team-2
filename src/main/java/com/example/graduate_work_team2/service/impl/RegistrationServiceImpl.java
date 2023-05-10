@@ -1,6 +1,7 @@
 package com.example.graduate_work_team2.service.impl;
 
 import com.example.graduate_work_team2.dto.RegisterReqDto;
+import com.example.graduate_work_team2.dto.Role;
 import com.example.graduate_work_team2.entity.User;
 import com.example.graduate_work_team2.mapper.UserMapper;
 import com.example.graduate_work_team2.repository.UserRepository;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import javax.validation.ValidationException;
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 /**
  * Имплементация сервиса для регистрации пользователя
@@ -28,12 +30,11 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public boolean register(RegisterReqDto registerReqDto) {
-        User user = userMapper.fromDtoRegReq(registerReqDto);
+        User user = userMapper.fromDto(registerReqDto);
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new ValidationException(String.format("Пользователь \"%s\" уже зарегистрирован!", user.getEmail()));
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRegDate(Instant.now());
         userRepository.save(user);
         return true;
     }

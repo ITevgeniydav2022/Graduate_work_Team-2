@@ -70,8 +70,8 @@ public class UserController {
     )
 
     @GetMapping("/users/me")
-    public ResponseEntity<UserDto> getUser(Authentication authentication) {
-        return ResponseEntity.ok(userService.getUserMe(authentication));
+    public ResponseEntity<UserDto> getUser() {
+        return ResponseEntity.ok(userService.getUserDto());
     }
 
     @Operation(summary = "Обновить информацию об авторизованном пользователе",
@@ -89,14 +89,14 @@ public class UserController {
     )
     @PatchMapping("/users/me")
     public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userDto) {
-        return ResponseEntity.ok(userService.updateUser(userDto));
+        return ResponseEntity.ok(userService.updateUserDto(userDto));
     }
 
     @Operation(summary = "Обновить аватар авторизованного пользователя",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "Аватар авторизованного пользователя",
+                            description = "Аватар авторизованного пользователя обновлен",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
                                     schema = @Schema(implementation = UserDto.class)
@@ -106,9 +106,10 @@ public class UserController {
             }
     )
 
-    @PatchMapping( "/me/image")
-    public ResponseEntity<String> updateUserImage(@RequestBody MultipartFile image, Authentication authentication) throws IOException {
-        return ResponseEntity.ok().body(userService.updateUserImage(image, authentication));
+    @PatchMapping(value = "/me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<byte []> updateUserImage(@RequestBody MultipartFile image){
+        userService.updateUserImage(image);
+        return ResponseEntity.ok().build();
     }
 
 }

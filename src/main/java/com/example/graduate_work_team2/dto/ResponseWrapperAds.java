@@ -14,10 +14,7 @@ import java.util.Collection;
  * @author Одокиенко Екатерина
  */
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
-public class ResponseWrapperAds<T> {
+public class ResponseWrapperAds {
     /**
      * поле - количество объявлений
      */
@@ -25,16 +22,11 @@ public class ResponseWrapperAds<T> {
     /**
      * поле - коллекция объявлений
      */
-    private Collection<T> results;
+    private Collection<AdsDto> results;
 
-    public static <T> ResponseWrapperAds<T> of(Collection<T> results) {
-        ResponseWrapperAds<T> responseWrapperA = new ResponseWrapperAds<>();
-        if (results == null) {
-            return responseWrapperA;
-        }
-        responseWrapperA.results = results;
-        responseWrapperA.count = results.size();
-        return responseWrapperA;
+    public ResponseWrapperAds(Collection<AdsDto> results) {
+        this.count=results.size();
+        this.results = results;
+
     }
-
 }

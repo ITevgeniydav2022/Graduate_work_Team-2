@@ -5,15 +5,14 @@ import lombok.Data;
 /**Класс, описывающий параметры объявлений**/
 @Data
 public class AdsDto {
+    /**id объявления**/
+    private int pk;
 
     /**id автора объявления**/
     private int author;
 
     /**ссылка на картинку объявления**/
     private String image;
-
-    /**id объявления**/
-    private int pk;
 
     /**цена объявления**/
     private int price;

@@ -11,9 +11,5 @@ import org.springframework.stereotype.Repository;
 /** Механизм для хранения, извлечения, обновления, удаления и поиска объектов. */
 @Repository
 public interface ImageRepository extends JpaRepository<Image,Long> {
-    /**
-     * Метод поиска объекта класса "Фото в объявлении" по айди объявления.
-     * @param adsId
-     */
-    Image findByAdsId(long adsId);
+
 }

@@ -1,5 +1,7 @@
-package com.example.graduate_work_team2.controller;
+package com.example.graduate_work_team2.configuration;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -12,6 +14,7 @@ import java.io.IOException;
 /**Базовый фильтр проверки подлинности**/
 @Component
 public class BasicAuthCorsFilter extends OncePerRequestFilter {
+    private static final Logger logger = LoggerFactory.getLogger(BasicAuthCorsFilter.class);
 
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest,

@@ -3,10 +3,13 @@ package com.example.graduate_work_team2.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.Arrays;
+import java.util.Objects;
+
 /**
  * Класс сущности "Фото"
  *
@@ -22,7 +25,6 @@ public class Image {
      * поле - айди фото
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     /**
      * поле - размер фото
@@ -40,13 +42,14 @@ public class Image {
      * поле - тип дата-данных фото
      */
     @Lob
-    @Type(type = "binary")
+    @Type(type = "org.hibernate.type.BinaryType")
     private byte[] data;
     /**
      * поле - объект сущности "Объявление"
      */
     @OneToOne
     private Ads ads;
+
     /**
      * поле - строкое представление сущности "Фото"
      */
@@ -54,4 +57,17 @@ public class Image {
         return "Объявление: id = " + this.getId() + ", инфо = " + Arrays.toString((this.getData()));
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Image image = (Image) o;
+        return Objects.equals(id, image.id);
+    }
+
+
+    @Override
+    public int hashCode() {
+       return getClass().hashCode();
+    }
 }

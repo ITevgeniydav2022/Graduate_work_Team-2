@@ -1,7 +1,6 @@
 package com.example.graduate_work_team2.service;
 
 import com.example.graduate_work_team2.dto.RegisterReqDto;
-import com.example.graduate_work_team2.entity.User;
 
 /**
  * Интерфейс сервиса для регистрации пользователя

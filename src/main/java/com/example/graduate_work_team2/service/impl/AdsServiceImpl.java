@@ -1,18 +1,20 @@
 package com.example.graduate_work_team2.service.impl;
 
-import com.example.graduate_work_team2.dto.AdsDto;
-import com.example.graduate_work_team2.dto.CreateAdsDto;
-import com.example.graduate_work_team2.dto.FullAdsDto;
+import com.example.graduate_work_team2.dto.*;
 import com.example.graduate_work_team2.entity.Ads;
 import com.example.graduate_work_team2.entity.Comment;
+import com.example.graduate_work_team2.entity.Image;
 import com.example.graduate_work_team2.entity.User;
 import com.example.graduate_work_team2.exception.AdsNotFoundException;
+import com.example.graduate_work_team2.exception.UserNotFoundException;
 import com.example.graduate_work_team2.mapper.AdsMapper;
 import com.example.graduate_work_team2.repository.AdsRepository;
 import com.example.graduate_work_team2.repository.CommentRepository;
+import com.example.graduate_work_team2.repository.ImageRepository;
 import com.example.graduate_work_team2.repository.UserRepository;
 import com.example.graduate_work_team2.service.AdsService;
 import com.example.graduate_work_team2.service.ImageService;
+import com.example.graduate_work_team2.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -23,12 +25,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
  * Имплементация сервиса для работы с объявлением
+ *
  * @author Одокиенко Екатерина
  */
 @Slf4j
@@ -40,83 +42,88 @@ public class AdsServiceImpl implements AdsService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final ImageService imageService;
+    private final ImageRepository imageRepository;
     private final AdsMapper adsMapper;
+    private final UserService userService;
+
     @Override
-    public Collection<AdsDto> getAllAds() {
+    public ResponseWrapperAds getAllAdsDto() {
         log.info("Был вызван метод получения всех объявлений");
-        return adsMapper.toAdsDto(adsRepository.findAll());
+        Collection<AdsDto> allAds = adsMapper.toDto(adsRepository.findAll());
+        return new ResponseWrapperAds(allAds);
     }
+
     @Override
-    public AdsDto addAds(CreateAdsDto createAdsDto, MultipartFile imageFiles) throws IOException {
+    public AdsDto addAds(CreateAdsDto createAdsDto, MultipartFile imageFiles) {
         log.info("Был вызван метод добавления объявления");
         User user = userRepository.findByEmail(SecurityContextHolder.getContext()
                 .getAuthentication().getName()).orElseThrow();
-        Ads ads = adsMapper.fromAdsDto(createAdsDto);
+        Ads ads = adsMapper.fromDto(createAdsDto);
         ads.setAuthor(user);
-        ads.setImage(imageService.uploadImage(imageFiles));
+        Image newImage = new Image();
+        try {
+            byte[] bytes = imageFiles.getBytes();
+            newImage.setFilePath(Arrays.toString(bytes));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        newImage.setId(Long.parseLong(UUID.randomUUID().toString()));
+        Image imageSaved = imageRepository.saveAndFlush(newImage);
+        ads.setImage(imageSaved);
+        adsRepository.save(ads);
         log.info("Объявление добавлено!");
-        return adsMapper.toAdsDto(adsRepository.save(ads));
+        return adsMapper.toDto(ads);
     }
 
     @Override
-    public Collection<AdsDto> getAdsMe(Authentication authentication) {
-        log.info("Был вызван метод авторизованного пользователя");
+    public ResponseWrapperAds getAdsMe() {
+        log.info("Был вызван метод получения объявлений авторизованного пользователя");
         User user = userRepository.findByEmail(SecurityContextHolder.getContext()
                 .getAuthentication().getName()).orElseThrow();
-        Collection<Ads> adsList = adsRepository.findAllByAuthorId(user.getId());
-        return adsMapper.toAdsDto(adsList);
+        Collection<Ads> adsList = adsRepository.findAll();
+        Collection<Ads> user_sAds = adsList.stream().filter(x -> x.getAuthor().equals(user)).toList();
+        return new ResponseWrapperAds(adsMapper.toDto(user_sAds));
     }
 
-    @Override
-    public Ads getAdsById(long adsId) {
-        log.info("Был вызван метод получения объявления по айди!");
-        return adsRepository.findById(adsId).orElseThrow(() ->
-                new AdsNotFoundException("Объявление с id " + adsId + " не найдено!"));
-    }
 
     @Override
-    public FullAdsDto getFullAdsDto(long adsId) {
+    public FullAdsDto getFullAdsDto(Long adsId) {
         log.info("Был вызван метод получения всей информации по объявлению");
         return adsMapper.toFullAdsDto(adsRepository.findById(adsId).
                 orElseThrow(() -> new AdsNotFoundException("Объявление с id " + adsId + " не найдено!")));
     }
 
     @Override
-    public boolean removeAdsById(Long adsId, Authentication authentication) {
+    public boolean removeAdsById(Long adsId) {
         log.info("Был вызван метод удаления объявления по айди");
+        Role role = Role.ADMIN;
         Ads ads = adsRepository.findById(adsId)
                 .orElseThrow(() -> new AdsNotFoundException("Объявление с id " + adsId + " не найдено!"));
-        User user = userRepository.findByEmail(authentication.getName()).orElseThrow();
-        if (ads.getAuthor().getEmail().equals(user.getEmail()) || user.getRole().getAuthority().equals("ADMIN")) {
+        Optional<User> user = userService.findAuthorizationUser();
+        if (ads.getAuthor().getEmail().equals(user.get().getEmail())) {
             List<Long> adsComments = commentRepository.findAll().stream()
                     .filter(comment -> comment.getAd().getId() == ads.getId())
                     .map(Comment::getId)
                     .collect(Collectors.toList());
             commentRepository.deleteAllById(adsComments);
-            try {
-                imageService.removeImage(ads.getImage().getId());
-            } catch (IOException e) {
-                log.error("Ошибка при попытке удаления изображения в объявлении " + e.getMessage());
-                throw new RuntimeException(e);
-            }
             adsRepository.delete(ads);
             return true;
         }
         return false;
     }
+
     @Override
-    public AdsDto updateAds(Long adsId, AdsDto updateAdsDto, Authentication authentication) {
+    public AdsDto updateAdsDto(Long adsId, CreateAdsDto createAdsDto) {
         log.info("Был вызван метод изменения объявления");
         Ads updatedAds = adsRepository.findById(adsId).orElseThrow(() ->
                 new AdsNotFoundException("Объявление с id " + adsId + " не найдено!"));
-        User user = userRepository.findByEmail(authentication.getName()).orElseThrow();
+        User user = userService.findAuthorizationUser().orElseThrow();
         if (updatedAds.getAuthor().getEmail().equals(user.getEmail()) || user.getRole().getAuthority().equals("ADMIN")) {
-            updatedAds.setTitle(updateAdsDto.getTitle());
-            updatedAds.setPrice(updateAdsDto.getPrice());
-            adsRepository.save(updatedAds);
-            log.info("Измененное объявление добавлено!");
-            return adsMapper.toAdsDto(updatedAds);
+            updatedAds.setTitle(createAdsDto.getTitle());
+            updatedAds.setPrice(createAdsDto.getPrice());
+            return adsMapper.toDto(adsRepository.save(updatedAds));
         }
-        return updateAdsDto;
+        log.info("Измененное объявление добавлено!");
+        throw new UserNotFoundException();
     }
 }

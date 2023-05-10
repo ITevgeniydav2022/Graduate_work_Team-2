@@ -15,10 +15,5 @@ import java.util.List;
 /** Механизм для хранения, извлечения, обновления, удаления и поиска объектов. */
 @Repository
 public interface AdsRepository extends JpaRepository<Ads, Long> {
-    /**
-     * Метод получения списка у объекта класса "Объявление" по айди автора объявления.
-     *
-     * @param id
-     */
-    List<Ads> findAllByAuthorId(long id);
+
 }

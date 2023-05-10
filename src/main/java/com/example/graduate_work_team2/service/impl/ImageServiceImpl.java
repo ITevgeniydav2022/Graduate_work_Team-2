@@ -21,6 +21,8 @@ import javax.transaction.Transactional;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
+
 /**
  * Имплементация сервиса для работы с фото в объявлении
  *
@@ -33,65 +35,49 @@ import java.nio.file.Path;
 public class ImageServiceImpl implements ImageService {
     private final ImageRepository imageRepository;
     private final AdsRepository adsRepository;
-    private final UserRepository userRepository;
-    private final AdsMapper adsMapper;
 
     @Override
     public Image uploadImage(MultipartFile imageFile) {
         Image image = new Image();
         try {
-            image.setData(imageFile.getBytes());
+            byte[] bytes = imageFile.getBytes();
+            image.setData(bytes);
         } catch (IOException e) {
             log.error("Ошибка при попытке сохранить изображение. " + e.getMessage());
             throw new RuntimeException(e);
         }
         image.setFileSize(imageFile.getSize());
         image.setMediaType(imageFile.getContentType());
+
         return imageRepository.save(image);
     }
 
     @Override
-    public AdsDto updateImage(MultipartFile imageFile, Authentication authentication, long adsId) throws IOException {
+    public void updateImageAdsDto(Long adsId, MultipartFile imageFile) {
         Ads ads = adsRepository.findById(adsId).orElseThrow(() ->
                 new AdsNotFoundException("Объявление с id " + adsId + " не найдено!"));
-        User user = userRepository.findByEmail(authentication.getName()).orElseThrow();
-        if (ads.getAuthor().getEmail().equals(user.getEmail()) || user.getRole().getAuthority().equals("ADMIN")) {
-            Image updatedImage = imageRepository.findByAdsId(adsId);
-            Path filePath = Path.of(updatedImage.getFilePath());
-//            уточнить, правильно ли сохранение файла???????
-            byte[] data = updatedImage.getData();
-            Files.deleteIfExists(filePath);
-            try {
-                Files.write(filePath, data);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-//            try (Files.write(filePath,imageFile.getBytes(),))
-//                    InputStream is = imageFile.getInputStream();
-//                    OutputStream os = Files.newOutputStream(filePath, CREATE_NEW);
-//                    BufferedInputStream bis = new BufferedInputStream(is, 1024);
-//                    BufferedOutputStream bos = new BufferedOutputStream(os, 1024)
-//            ) {
-////                bis.transferTo(bos);
-//            }
-            updatedImage.setFileSize(imageFile.getSize());
-            updatedImage.setMediaType(imageFile.getContentType());
-            updatedImage.setData(imageFile.getBytes());
-            ads.setImage(imageRepository.save(updatedImage));
-            adsRepository.save(ads);
+       Image imageBefore = ads.getImage();
+        try {
+            byte[] bytes = imageFile.getBytes();
+            imageBefore.setFilePath(Arrays.toString(bytes));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        return adsMapper.toAdsDto(ads);
+        Image imageSaved = imageRepository.saveAndFlush(imageBefore);
+        ads.setImage(imageSaved);
+        adsRepository.save(ads);
     }
 
     @Override
-    public Image getImageById(long id) {
+    public byte[] getImageById(Long id) {
         log.info("Был вызван метод получения изображения по id пользователя. ");
-        return imageRepository.findById(id).orElseThrow(() ->
+        Image image =  imageRepository.findById(id).orElseThrow(() ->
                 new NotFoundException("Картинка с id " + id + " не найдена!"));
+        return image.getData();
     }
 
     @Override
-    public void removeImage(long id) {
+    public void removeImage(Long id) {
         Image images = imageRepository.findById(id).orElseThrow(() ->
                 new NotFoundException("Картинка с id " + id + " не найдена!"));
         Path filePath = Path.of(images.getFilePath());

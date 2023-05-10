@@ -6,8 +6,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Класс сущности "Пользователь"
@@ -20,7 +22,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Table(name = "users")
 
-public class User {
+public class User{
     /**
      * поле - айди пользователя
      */
@@ -65,5 +67,39 @@ public class User {
      */
     @Enumerated(EnumType.STRING)
     private Role role;
+//    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Ads> ads = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
+//    private List<Comment> comments = new ArrayList<>();
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        if (id != 0) {
+            return id == user.id;
+        } else {
+            return Objects.equals(firstName, user.firstName)
+                    && Objects.equals(lastName, user.lastName)
+                    && Objects.equals(email, user.email)
+                    && Objects.equals(password, user.password)
+                    && Objects.equals(phone, user.phone)
+                    && Objects.equals(city, user.city)
+                    && Objects.equals(regDate, user.regDate)
+                    && Objects.equals(image, user.image)
+                    && role == user.role;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        if (id != 0) {
+            return Objects.hash(id);
+        }
+        return Objects.hash(id, firstName, lastName, email, password, phone, city, regDate, image, role);
+    }
+
 
 }

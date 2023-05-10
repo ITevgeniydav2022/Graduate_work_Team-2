@@ -1,14 +1,11 @@
 package com.example.graduate_work_team2.service;
 
-import com.example.graduate_work_team2.dto.CreateUserDto;
-import com.example.graduate_work_team2.dto.Role;
 import com.example.graduate_work_team2.dto.UserDto;
 import com.example.graduate_work_team2.entity.User;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.Collection;
+
+import java.util.Optional;
 
 /**
  * Интерфейс сервиса для работы с пользователем
@@ -16,51 +13,27 @@ import java.util.Collection;
  * @author Одокиенко Екатерина
  */
 public interface UserService {
-    /**
-     * Метод получения авторизованного пользователя
-     *
-     * @param authentication - данные авторизации
-     * @return User
-     */
-    User getUser(Authentication authentication);
 
     /**
-     * Метод создания пользователя
-     *
-     * @param createUserDto - объект класса "Пользователь" для передачи данных
-     * @return User
+     * Метод возвращает Dto авторизованного пользователя
+     * @return UserDto
      */
-    UserDto createUser(CreateUserDto createUserDto);
-
-    /**
-     * Метод получения коллекции всех существующих пользователей
-     *
-     * @return Collection<User>
-     */
-    Collection<UserDto> getUsers();
-
-    /**
-     * Метод получения аутентифицированного пользователя.
-     *
-     * @return User
-     */
-    UserDto getUserMe(Authentication authentication);
+    UserDto getUserDto();
 
     /**
      * Метод редактирования пользователя
      *
-     * @param user - объект класса "Пользователь"
+
      * @return User - изменённый пользователь
      */
-    UserDto updateUser(UserDto user);
+    UserDto updateUserDto(UserDto dto);
 
     /**
-     * Метод получения пользователя по айди
-     *
-     * @param id - айди пользователя
-     * @return User
+     * Метод поиска авторизованного пользователя
+
+     * @return Optional<User>
      */
-    User getUserById(long id);
+    Optional<User> findAuthorizationUser();
 
     /**
      * Метод изменения пароля пользователя
@@ -75,15 +48,7 @@ public interface UserService {
      * Метод изменения аватара пользователя
      *
      * @param image - новое фото
-     * @param authentication - данные аутентификации
      */
-    String updateUserImage(MultipartFile image, Authentication authentication) throws IOException;
+    void updateUserImage(MultipartFile image);
 
-    /**
-     * Метод изменения роли пользователя
-     *
-     * @param id  -  идентификатор пользователя
-     * @param role - новая роль
-     */
-    UserDto updateRole(long id, Role role);
 }

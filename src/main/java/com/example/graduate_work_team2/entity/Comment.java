@@ -5,8 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.Objects;
 
 /**
  * Класс сущности "Комментарий"
@@ -33,10 +34,10 @@ public class Comment {
      * поле - текст комментария
      */
     private String text;
-    @ManyToOne(fetch = FetchType.LAZY)
     /**
      * поле - автор комментария
      */
+    @ManyToOne
     @JoinColumn(name = "author_id")
     private User author;
     /**
@@ -46,4 +47,27 @@ public class Comment {
     @JoinColumn(name = "pk_ads")
     private Ads ad;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Comment comment = (Comment) o;
+        if (id != 0) {
+            return id == comment.id;
+        } else {
+            return Objects.equals(createdAt, comment.createdAt)
+                    && Objects.equals(text, comment.text)
+                    && Objects.equals(author, comment.author)
+                    && Objects.equals(ad, comment.ad);
+        }
+
+    }
+
+    @Override
+    public int hashCode() {
+        if (id != 0) {
+            return Objects.hash(id);
+        }
+        return Objects.hash(id, createdAt, text, author, ad);
+    }
 }

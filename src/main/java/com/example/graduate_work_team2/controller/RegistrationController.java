@@ -1,6 +1,7 @@
 package com.example.graduate_work_team2.controller;
 
 import com.example.graduate_work_team2.dto.RegisterReqDto;
+import com.example.graduate_work_team2.dto.Role;
 import com.example.graduate_work_team2.service.RegistrationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -8,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,11 +20,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
+import static com.example.graduate_work_team2.dto.Role.USER;
+
 /**
  * Класс контроллера для регистрации пользователя
  *
  * @author Одокиенко Екатерина
  */
+@Slf4j
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
 @RequiredArgsConstructor
@@ -41,7 +46,7 @@ public class RegistrationController {
                             )
                     ),
                     @ApiResponse(responseCode = "400",
-                            description = "Пользователь не найден!")
+                            description = "Пользователь не найден!", content = {@Content})
             }
     )
 

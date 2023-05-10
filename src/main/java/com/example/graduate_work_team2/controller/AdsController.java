@@ -1,15 +1,11 @@
 package com.example.graduate_work_team2.controller;
 
-import com.example.graduate_work_team2.dto.AdsDto;
-import com.example.graduate_work_team2.dto.CreateAdsDto;
-import com.example.graduate_work_team2.dto.FullAdsDto;
-import com.example.graduate_work_team2.dto.ResponseWrapperAds;
-import com.example.graduate_work_team2.entity.Ads;
-import com.example.graduate_work_team2.mapper.AdsMapper;
+import com.example.graduate_work_team2.dto.*;
 import com.example.graduate_work_team2.service.AdsService;
 import com.example.graduate_work_team2.service.ImageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -19,8 +15,6 @@ import lombok.SneakyThrows;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -42,9 +36,7 @@ import java.io.IOException;
 @Tag(name = "Объявления", description = "AdsController")
 public class AdsController {
     private final AdsService adsService;
-
     private final ImageService imagesService;
-    private final AdsMapper adsMapper;
 
     @Operation(summary = "Получить все объявления",
             responses = {
@@ -53,17 +45,17 @@ public class AdsController {
                             description = "Все найденные объявления",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = AdsDto[].class)
+                                    schema = @Schema(implementation = ResponseWrapperAds.class)
                             )
                     )
             }
     )
 
     @GetMapping
-    public ResponseWrapperAds<AdsDto> getAllAds() {
-        return ResponseWrapperAds.of(adsService.getAllAds());
+    public ResponseEntity<ResponseWrapperAds> getAllAds() {
+        return ResponseEntity.ok(adsService.getAllAdsDto());
     }
-    @SneakyThrows
+//    @SneakyThrows
     @Operation(summary = "Добавить объявление",
             responses = {
                     @ApiResponse(
@@ -82,7 +74,7 @@ public class AdsController {
     public ResponseEntity<AdsDto> addAds(@Parameter(in = ParameterIn.DEFAULT, description = "Данные нового объявления",
             required = true, schema = @Schema())
                                          @RequestPart("image") MultipartFile image,
-                                         @RequestPart("properties") @Valid CreateAdsDto dto) throws IOException {
+                                         @RequestPart("properties") CreateAdsDto dto) throws IOException {
         return ResponseEntity.ok(adsService.addAds(dto, image));
     }
     @Operation(summary = "Получить информацию об объявлении",
@@ -92,7 +84,7 @@ public class AdsController {
                             description = "Вся информация об объявлении",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = AdsDto[].class)
+                                    schema = @Schema(implementation = FullAdsDto.class)
                             )
                     ),
                     @ApiResponse(responseCode = "401", description = "Для доступа к запрашиваемому ресурсу требуется аутентификация", content = @Content())
@@ -112,8 +104,8 @@ public class AdsController {
     )
 
     @DeleteMapping("/{adsId}")
-    public ResponseEntity<HttpStatus> removeAds(@PathVariable long adsId, Authentication authentication) throws IOException {
-        if (adsService.removeAdsById(adsId, authentication)) {
+    public ResponseEntity<HttpStatus> removeAds(@PathVariable Long adsId) {
+        if (adsService.removeAdsById(adsId)) {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).build();
@@ -134,14 +126,9 @@ public class AdsController {
     )
 
     @PatchMapping("/{adsId}")
-    public ResponseEntity<AdsDto> updateAds(@PathVariable long adsId,
-                                            @RequestBody AdsDto updatedAdsDto,Authentication authentication) {
-
-        AdsDto updateAdsDto = adsService.updateAds(adsId, updatedAdsDto, authentication);
-        if (updateAdsDto.equals(updatedAdsDto)) {
-            return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).build();
-        }
-        return ResponseEntity.ok(updateAdsDto);
+    public ResponseEntity<AdsDto> updateAds(@PathVariable Long adsId,
+                                            @RequestBody CreateAdsDto createAdsDto) {
+                return ResponseEntity.ok(adsService.updateAdsDto(adsId,createAdsDto));
     }
     @Operation(summary = "Получить объявления авторизованного пользователя",
             responses = {
@@ -150,7 +137,7 @@ public class AdsController {
                             description = "Все объявления авторизованного пользователя",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = AdsDto[].class)
+                                    schema = @Schema(implementation = ResponseWrapperAds.class)
                             )
                     ),
                     @ApiResponse(responseCode = "401", description = "Для доступа к запрашиваемому ресурсу требуется аутентификация", content = @Content())
@@ -158,8 +145,8 @@ public class AdsController {
     )
 
     @GetMapping("/me")
-    public ResponseWrapperAds<AdsDto> getAdsMe(Authentication authentication) {
-        return ResponseWrapperAds.of(adsService.getAdsMe(authentication));
+    public ResponseEntity<ResponseWrapperAds> getAdsMe() {
+        return ResponseEntity.ok(adsService.getAdsMe());
     }
     @Operation(summary = "Обновить картинку объявления",
             responses = {
@@ -167,8 +154,8 @@ public class AdsController {
                             responseCode = "200",
                             description = "Новое фото",
                             content = @Content(
-                                    mediaType = MediaType.MULTIPART_FORM_DATA_VALUE,
-                                    schema = @Schema(implementation = AdsDto.class)
+                                    mediaType = MediaType.APPLICATION_OCTET_STREAM_VALUE,
+                                    array = @ArraySchema(schema = @Schema(type = "string", format = "byte"))
                             )
                     ),
                     @ApiResponse(responseCode = "401", description = "Для доступа к запрашиваемому ресурсу требуется аутентификация", content = @Content()),
@@ -177,11 +164,13 @@ public class AdsController {
     )
 
     @PatchMapping(value = "/{adsId}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<AdsDto> updateAdsImage(@PathVariable long adsId, Authentication authentication,
-                                                 @Parameter(in = ParameterIn.DEFAULT, description = "Загрузите сюда новое изображение",
+    public ResponseEntity<byte []> updateAdsImage(@PathVariable Long adsId,
+                                                  @Parameter(in = ParameterIn.DEFAULT,
+                                                          description = "Загрузите сюда новое изображение",
             schema = @Schema())
-    @RequestPart(value = "image") @Valid MultipartFile image) throws IOException {
-        return ResponseEntity.ok(imagesService.updateImage(image, authentication, adsId));
+    @RequestPart(value = "image") @Valid MultipartFile image){
+        imagesService.updateImageAdsDto(adsId, image);
+        return ResponseEntity.ok().build();
     }
 
 }

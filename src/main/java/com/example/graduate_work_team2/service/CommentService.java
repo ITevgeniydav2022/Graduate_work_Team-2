@@ -1,10 +1,9 @@
 package com.example.graduate_work_team2.service;
 
 import com.example.graduate_work_team2.dto.CommentDto;
-import com.example.graduate_work_team2.entity.Comment;
+import com.example.graduate_work_team2.dto.ResponseWrapperComment;
 import org.springframework.security.core.Authentication;
 
-import java.util.Collection;
 
 /**
  * Интерфейс сервиса для работы с комментариями
@@ -22,44 +21,35 @@ public interface CommentService {
      * @return Comment
      */
 
-    CommentDto updateComment(long adsId, long comId, CommentDto updateComment, Authentication authentication);
+    CommentDto updateComment(Long adsId, Long comId, CommentDto updateComment, Authentication authentication);
 
     /**
      * Метод удаления комментария по его айди и айди объявления
      *
      * @param adsId          - айди объявления
      * @param comId          - айди комментария
-     * @param authentication - данные аутентификации
+
      * @return возвращает true, если комментарий удалён, иначе false
      */
-    boolean deleteComment(long adsId, long comId, Authentication authentication);
+    boolean deleteCommentDto(Long adsId, Long comId);
 
     /**
-     * Метод получения коллекции комментариев у определенного объявления
+     * Метод получения комментария у определенного объявления
      *
      * @param adsId - айди объявления
      * @return Collection<Comment>
      */
-    Collection<CommentDto> getComments(long adsId);
+   ResponseWrapperComment getCommentsDto(Long adsId);
 
     /**
-     * Метод добавления комментария в объявлении
+     * Метод добавления комментария в объявлении по айди объявления
      *
      * @param adsId          - айди объявления
      * @param commentDto     - модель Dto комментария с именем автора, датой создания и самим текстом объявления
-     * @param authentication - данные аутентификации
+
      * @return Comment
      */
-    Comment addAdsComments(long adsId, CommentDto commentDto, Authentication authentication);
+    CommentDto addAdsCommentsDto(Long adsId, CommentDto commentDto);
 
-//    ????пока возможно и не понадобится
-//    /**
-//     * Метод получения комментария по его айди
-//     *
-//     * @param id    - айди комментария
-//     * @param adsId - айди объявления
-//     * @return Comment
-//     */
-//    CommentDto getAdsComment(long adsId, long id);
 
 }

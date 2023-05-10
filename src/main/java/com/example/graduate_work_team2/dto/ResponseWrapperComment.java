@@ -14,10 +14,7 @@ import java.util.Collection;
  * @author Одокиенко Екатерина
  */
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
-public class ResponseWrapperComment<T> {
+public class ResponseWrapperComment {
     /**
      * поле - количество комментариев
      */
@@ -25,14 +22,11 @@ public class ResponseWrapperComment<T> {
     /**
      * поле - коллекция комментариев
      */
-    private Collection<T> results;
-    public static <T> ResponseWrapperComment<T> of(Collection<T> results) {
-        ResponseWrapperComment<T> responseWrapperC = new ResponseWrapperComment<>();
-        if (results == null) {
-            return responseWrapperC;
-        }
-        responseWrapperC.results = results;
-        responseWrapperC.count = results.size();
-        return responseWrapperC;
+    private Collection<CommentDto> results;
+
+    public ResponseWrapperComment(Collection<CommentDto> results) {
+        this.count=results.size();
+        this.results=results;
+
     }
 }

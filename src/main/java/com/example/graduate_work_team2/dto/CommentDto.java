@@ -5,6 +5,8 @@ import lombok.Data;
 /**Класс, описывающий параметры комментариев**/
 @Data
 public class CommentDto {
+    /**id комментария**/
+    private int pk;
 
     /**id автора комментария**/
     private int author;
@@ -18,8 +20,6 @@ public class CommentDto {
     /**дата и время создания комментария в миллисекундах с 00:00:00 01.01.1970**/
     private long createdAt;
 
-    /**id комментария**/
-    private int pk;
 
     /**текст комментария**/
     private String text;

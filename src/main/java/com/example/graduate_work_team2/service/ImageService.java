@@ -26,11 +26,11 @@ public interface ImageService {
      * Метод обновления фото объявления
      *
      * @param imageFile      - фото из объявления
-     * @param authentication - данные аутентификации
+     *
      * @param adsId          - айди объявления
      * @throws IOException, если объект не был найден
      */
-    AdsDto updateImage(MultipartFile imageFile, Authentication authentication, long adsId) throws IOException;
+    void updateImageAdsDto(Long adsId, MultipartFile imageFile);
 
     /**
      * Метод получения фото по его айди
@@ -38,7 +38,7 @@ public interface ImageService {
      * @param id - айди фото
      * @return Images
      */
-    Image getImageById(long id);
+    byte[] getImageById(Long id);
 
     /**
      * Метод удаления фото по айди
@@ -46,5 +46,5 @@ public interface ImageService {
      * @param id - айди фото
      * @throws IOException, если объект не был найден
      */
-    void removeImage(long id) throws IOException;
+    void removeImage(Long id) throws IOException;
 }

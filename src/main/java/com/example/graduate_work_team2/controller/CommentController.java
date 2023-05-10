@@ -47,8 +47,9 @@ public class CommentController {
     )
 
     @GetMapping("/{adsId}/comments")
-    public ResponseWrapperComment<CommentDto> getAdsComments(@PathVariable long adsId) {
-        return ResponseWrapperComment.of(commentService.getComments(adsId));
+    public ResponseEntity<ResponseWrapperComment> getAdsComments(@PathVariable Long adsId) {
+        ResponseWrapperComment responseWrapperComment=commentService.getCommentsDto(adsId);
+        return ResponseEntity.ok().body(responseWrapperComment);
     }
     @Operation(summary = "Добавить комментарий к объявлению",
             responses = {
@@ -59,13 +60,15 @@ public class CommentController {
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
                                     schema = @Schema(implementation = CommentDto.class)
                             )
-                    )
+                    ),
+                    @ApiResponse(responseCode = "401",description = "Ошибочный ввод имени и/или пароля", content = @Content())
             }
     )
 
     @PostMapping("/{adsId}/comments")
-    public Comment addAdsComments(@PathVariable long adsId, @RequestBody @Valid CommentDto commentDto, Authentication authentication) {
-        return commentService.addAdsComments(adsId,commentDto,authentication);
+    public ResponseEntity<CommentDto> addAdsComments(@PathVariable Long adsId, @RequestBody @Valid CommentDto commentDto) {
+        CommentDto newComDto = commentService.addAdsCommentsDto(adsId,commentDto);
+        return ResponseEntity.ok().body(newComDto);
     }
     @Operation(summary = "Удалить комментарий",
             responses = {
@@ -83,9 +86,8 @@ public class CommentController {
     )
 
     @DeleteMapping("/{adsId}/comments/{comId}")
-    public ResponseEntity<HttpStatus> deleteComment(@PathVariable long adsId, @PathVariable long comId,
-                                                       Authentication authentication) {
-        if (commentService.deleteComment(adsId, comId, authentication)) {
+    public ResponseEntity<HttpStatus> deleteComment(@PathVariable Long adsId, @PathVariable Long comId) {
+        if (commentService.deleteCommentDto(adsId, comId)) {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).build();
@@ -106,7 +108,7 @@ public class CommentController {
     )
 
     @PatchMapping("/{adsId}/comments/{comId}")
-    public ResponseEntity<CommentDto> updateComment(@PathVariable long adsId, @PathVariable long comId,
+    public ResponseEntity<CommentDto> updateComment(@PathVariable Long adsId, @PathVariable Long comId,
                                                           @RequestBody CommentDto updateCommentDto,
                                                           Authentication authentication) {
         CommentDto updatedCommentDto = commentService.updateComment(adsId, comId,
