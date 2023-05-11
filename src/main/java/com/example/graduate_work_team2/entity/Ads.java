@@ -52,17 +52,6 @@ public class Ads {
     @JoinColumn(name = "image_id")
     private Image image;
 
-//    @OneToMany
-//    private List<Comment> comments = new ArrayList<>();
-
-//    public Ads(int id, User author, String title, String description, Image image, int price) {
-//        this.id = id;
-//        this.author = author;
-//        this.title = title;
-//        this.description = description;
-//        this.image = image;
-//        this.price = price;
-//    }
 
     @Override
     public boolean equals(Object o) {

@@ -22,6 +22,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.UUID;
 
 /**
  * Имплементация сервиса для работы с фото в объявлении
@@ -41,15 +42,13 @@ public class ImageServiceImpl implements ImageService {
         Image image = new Image();
         try {
             byte[] bytes = imageFile.getBytes();
-            image.setData(bytes);
+            image.setFilePath(Arrays.toString(bytes));
         } catch (IOException e) {
             log.error("Ошибка при попытке сохранить изображение. " + e.getMessage());
             throw new RuntimeException(e);
         }
-        image.setFileSize(imageFile.getSize());
-        image.setMediaType(imageFile.getContentType());
-
-        return imageRepository.save(image);
+        image.setId(Long.parseLong(UUID.randomUUID().toString()));
+        return imageRepository.saveAndFlush(image);
     }
 
     @Override

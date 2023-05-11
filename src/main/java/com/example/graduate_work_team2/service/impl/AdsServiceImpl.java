@@ -56,23 +56,13 @@ public class AdsServiceImpl implements AdsService {
     @Override
     public AdsDto addAds(CreateAdsDto createAdsDto, MultipartFile imageFiles) {
         log.info("Был вызван метод добавления объявления");
-        User user = userRepository.findByEmail(SecurityContextHolder.getContext()
-                .getAuthentication().getName()).orElseThrow();
-        Ads ads = adsMapper.fromDto(createAdsDto);
-        ads.setAuthor(user);
-        Image newImage = new Image();
-        try {
-            byte[] bytes = imageFiles.getBytes();
-            newImage.setFilePath(Arrays.toString(bytes));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        newImage.setId(Long.parseLong(UUID.randomUUID().toString()));
-        Image imageSaved = imageRepository.saveAndFlush(newImage);
-        ads.setImage(imageSaved);
-        adsRepository.save(ads);
+        Ads newAds = adsMapper.fromDto(createAdsDto);
+        newAds.setAuthor(userService.findAuthorizationUser().orElseThrow(UserNotFoundException::new));
+        Image newImage = imageService.uploadImage(imageFiles);
+        newAds.setImage(newImage);
+        adsRepository.save(newAds);
         log.info("Объявление добавлено!");
-        return adsMapper.toDto(ads);
+        return adsMapper.toDto(newAds);
     }
 
     @Override

@@ -10,6 +10,7 @@ import java.io.IOException;
 
 /**
  * Интерфейс сервиса для работы с фото в объявлениях
+ *
  * @author Одокиенко Екатерина
  */
 public interface ImageService {
@@ -18,16 +19,14 @@ public interface ImageService {
      *
      * @param imageFile - фото из объявления
      * @return Images
-     * @throws IOException, если объект не был найден
      */
-    Image uploadImage(MultipartFile imageFile) throws IOException;
+    Image uploadImage(MultipartFile imageFile);
 
     /**
      * Метод обновления фото объявления
      *
-     * @param imageFile      - фото из объявления
-     *
-     * @param adsId          - айди объявления
+     * @param imageFile - фото из объявления
+     * @param adsId     - айди объявления
      * @throws IOException, если объект не был найден
      */
     void updateImageAdsDto(Long adsId, MultipartFile imageFile);
