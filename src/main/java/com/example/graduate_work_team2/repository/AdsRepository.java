@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 
 
 
-
 /**
  * Интерфейс AdsRepository для класса "Объявление"
  * @author Одокиенко Екатерина
