@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +30,7 @@ import java.io.IOException;
  *
  * @author Одокиенко Екатерина
  */
+@Slf4j
 @CrossOrigin(value = "http://localhost:3000")
 @RequiredArgsConstructor
 @RestController
@@ -36,7 +38,6 @@ import java.io.IOException;
 @Tag(name = "Объявления", description = "AdsController")
 public class AdsController {
     private final AdsService adsService;
-    private final ImageService imagesService;
 
     @Operation(summary = "Получить все объявления",
             responses = {
@@ -53,6 +54,7 @@ public class AdsController {
 
     @GetMapping
     public ResponseEntity<ResponseWrapperAds> getAllAds() {
+        log.info("Был вызван метод контроллера для получения всех объявлений");
         return ResponseEntity.ok(adsService.getAllAdsDto());
     }
 //    @SneakyThrows
@@ -71,10 +73,9 @@ public class AdsController {
     )
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<AdsDto> addAds(@Parameter(in = ParameterIn.DEFAULT, description = "Данные нового объявления",
-            required = true, schema = @Schema())
-                                         @RequestPart("image") MultipartFile image,
-                                         @RequestPart("properties") CreateAdsDto dto) throws IOException {
+    public ResponseEntity<AdsDto> addAds(@RequestPart("dto") CreateAdsDto dto,
+                                         @RequestPart("image") MultipartFile image) throws IOException {
+        log.info("Был вызван метод контроллера для добавления объявления");
         return ResponseEntity.ok(adsService.addAds(dto, image));
     }
     @Operation(summary = "Получить информацию об объявлении",
@@ -91,9 +92,10 @@ public class AdsController {
             }
     )
 
-    @GetMapping("/{adsId}")
-    public ResponseEntity<FullAdsDto> getFullAdsDto(@PathVariable("adsId") Long adsId) {
-        return ResponseEntity.ok(adsService.getFullAdsDto(adsId));
+    @GetMapping("/{id}")
+    public ResponseEntity<FullAdsDto> getFullAdsDto(@PathVariable("id") Integer id) {
+        log.info("Был вызван метод контроллера для получения всей информации об объявлении");
+        return ResponseEntity.ok(adsService.getFullAdsDto(id));
     }
     @Operation(summary = "Удаление объявления",
             responses = {
@@ -103,9 +105,10 @@ public class AdsController {
             }
     )
 
-    @DeleteMapping("/{adsId}")
-    public ResponseEntity<HttpStatus> removeAds(@PathVariable Long adsId) {
-        if (adsService.removeAdsById(adsId)) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<HttpStatus> removeAds(@PathVariable Integer id) {
+        log.info("Был вызван метод контроллера для удаления объявления");
+        if (adsService.removeAdsById(id)) {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).build();
@@ -125,10 +128,11 @@ public class AdsController {
             }
     )
 
-    @PatchMapping("/{adsId}")
-    public ResponseEntity<AdsDto> updateAds(@PathVariable Long adsId,
+    @PatchMapping("/{id}")
+    public ResponseEntity<AdsDto> updateAds(@PathVariable Integer id,
                                             @RequestBody CreateAdsDto createAdsDto) {
-                return ResponseEntity.ok(adsService.updateAdsDto(adsId,createAdsDto));
+        log.info("Был вызван метод контроллера для изменения объявления");
+                return ResponseEntity.ok(adsService.updateAdsDto(id,createAdsDto));
     }
     @Operation(summary = "Получить объявления авторизованного пользователя",
             responses = {
@@ -146,6 +150,7 @@ public class AdsController {
 
     @GetMapping("/me")
     public ResponseEntity<ResponseWrapperAds> getAdsMe() {
+        log.info("Был вызван метод контроллера для получения объявления авторизованного пользователя");
         return ResponseEntity.ok(adsService.getAdsMe());
     }
     @Operation(summary = "Обновить картинку объявления",
@@ -163,13 +168,14 @@ public class AdsController {
             }
     )
 
-    @PatchMapping(value = "/{adsId}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<byte []> updateAdsImage(@PathVariable Long adsId,
+    @PatchMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<byte []> updateAdsImage(@PathVariable Integer id,
                                                   @Parameter(in = ParameterIn.DEFAULT,
                                                           description = "Загрузите сюда новое изображение",
             schema = @Schema())
-    @RequestPart(value = "image") @Valid MultipartFile image){
-        imagesService.updateImageAdsDto(adsId, image);
+    @RequestPart(value = "image") @Valid MultipartFile image) throws IOException {
+        log.info("Был вызван метод контроллера для обновления картинки объявления");
+        adsService.updateAdsImage(id,image);
         return ResponseEntity.ok().build();
     }
 

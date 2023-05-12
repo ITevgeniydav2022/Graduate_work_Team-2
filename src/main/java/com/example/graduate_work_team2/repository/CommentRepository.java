@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 
 /** Механизм для хранения, извлечения, обновления, удаления и поиска объектов. */
 @Repository
-public interface CommentRepository extends JpaRepository<Comment, Long> {
+public interface CommentRepository extends JpaRepository<Comment, Integer> {
 
 
 }

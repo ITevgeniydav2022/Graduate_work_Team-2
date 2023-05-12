@@ -30,7 +30,7 @@ import java.util.Optional;
  * @author Одокиенко Екатерина
  */
 @Slf4j
-@Transactional
+//@Transactional
 @RequiredArgsConstructor
 @Service
 public class CommentServiceImpl implements CommentService {
@@ -41,13 +41,13 @@ public class CommentServiceImpl implements CommentService {
     private final AdsService adsService;
     private final AdsRepository adsRepository;
     @Override
-    public CommentDto updateComment(Long adsId, Long comId, CommentDto updateComment, Authentication authentication) {
+    public CommentDto updateComment(Integer adsId, Integer comId, CommentDto updateComment, Authentication authentication) {
         log.info("Был вызван метод изменения комментария. ");
         Comment updatedComment = commentRepository.findById(adsId)
                 .orElseThrow(() -> new CommentNotFoundException("Комментарий с id " + adsId + " не найден!"));
         User user = userRepository.findByEmail(authentication.getName()).orElseThrow();
         if (updatedComment.getAuthor().getEmail().equals(user.getEmail()) || user.getRole().getAuthority().equals("ADMIN")) {
-            if (updatedComment.getAd().getId() != adsId) {
+            if (updatedComment.getAds().getId() != adsId) {
                 throw new CommentNotFoundException("Комментарий с id " + comId + " не принадлежит объявлению с id " + adsId);
             }
             updatedComment.setText(updateComment.getText());
@@ -58,7 +58,7 @@ public class CommentServiceImpl implements CommentService {
 
     }
     @Override
-    public boolean deleteCommentDto(Long adsId, Long comId) {
+    public boolean deleteCommentDto(Integer adsId, Integer comId) {
         log.info("Был вызван метод удаления комментария.");
         Role role = Role.ADMIN;
         Comment comment = commentRepository.findById(comId)
@@ -67,7 +67,7 @@ public class CommentServiceImpl implements CommentService {
 //        User simpleUser = user.get();
 //        String correctUser = simpleUser.getUsername();
         if (comment.getAuthor().getEmail().equals(user.get().getEmail()) ) {
-            if (comment.getAd().getId() != adsId) {
+            if (comment.getAds().getId() != adsId) {
                 throw new CommentNotFoundException("Комментарий с id " + comId+ " не принадлежит объявлению с id " + adsId);
             }
             commentRepository.delete(comment);
@@ -76,23 +76,23 @@ public class CommentServiceImpl implements CommentService {
         return false;
     }
     @Override
-    public CommentDto addAdsCommentsDto(Long adsId, CommentDto commentDto) {
+    public CommentDto addAdsCommentsDto(Integer adsId, CommentDto commentDto) {
         log.info("Был вызван метод создания комментария.");
         Ads ads = adsRepository.findById(adsId).orElseThrow();
         Comment comment = commentMapper.fromDto(commentDto);
         comment.setAuthor(userService.findAuthorizationUser().orElseThrow());
-        comment.setAd(ads);
+        comment.setAds(ads);
         comment.setCreatedAt(LocalDateTime.now());
         commentRepository.save(comment);
         return commentMapper.toDto(comment);
     }
     @Override
-    public ResponseWrapperComment getCommentsDto(Long adsId) {
+    public ResponseWrapperComment getCommentsDto(Integer adsId) {
         log.info("Был вызван метод получения всех комментариев по id пользователя. ");
         Collection<Comment> commentList = commentRepository.findAll();
         Collection<CommentDto> commentDtoCollection = new ArrayList<>();
         for (Comment comment : commentList) {
-            if (adsId.equals(comment.getAd().getId()) )
+            if (adsId.equals(comment.getAds().getId()) )
             {
                 commentDtoCollection.add(commentMapper.toDto(comment));
             }

@@ -21,7 +21,7 @@ public interface CommentService {
      * @return Comment
      */
 
-    CommentDto updateComment(Long adsId, Long comId, CommentDto updateComment, Authentication authentication);
+    CommentDto updateComment(Integer adsId, Integer comId, CommentDto updateComment, Authentication authentication);
 
     /**
      * Метод удаления комментария по его айди и айди объявления
@@ -31,7 +31,7 @@ public interface CommentService {
 
      * @return возвращает true, если комментарий удалён, иначе false
      */
-    boolean deleteCommentDto(Long adsId, Long comId);
+    boolean deleteCommentDto(Integer adsId, Integer comId);
 
     /**
      * Метод получения комментария у определенного объявления
@@ -39,7 +39,7 @@ public interface CommentService {
      * @param adsId - айди объявления
      * @return Collection<Comment>
      */
-   ResponseWrapperComment getCommentsDto(Long adsId);
+   ResponseWrapperComment getCommentsDto(Integer adsId);
 
     /**
      * Метод добавления комментария в объявлении по айди объявления
@@ -49,7 +49,7 @@ public interface CommentService {
 
      * @return Comment
      */
-    CommentDto addAdsCommentsDto(Long adsId, CommentDto commentDto);
+    CommentDto addAdsCommentsDto(Integer adsId, CommentDto commentDto);
 
 
 }

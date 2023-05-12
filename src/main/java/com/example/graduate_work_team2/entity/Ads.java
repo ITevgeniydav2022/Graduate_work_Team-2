@@ -23,7 +23,7 @@ public class Ads {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
-    private long id;
+    private int id;
     /**
      * поле - заголовок объявления
      */
@@ -64,9 +64,7 @@ public class Ads {
             return price == ads.price && Objects.equals(title, ads.title)
                     && Objects.equals(description, ads.description)
                     && Objects.equals(author, ads.author)
-                    && Objects.equals(image, ads.image)
-//                    && Objects.equals(comments, ads.comments)
-                    ;
+                    && Objects.equals(image, ads.image);
         }
     }
 
@@ -75,8 +73,6 @@ public class Ads {
         if (id != 0) {
             return Objects.hash(id);
         }
-        return Objects.hash(id, title, description, price, author, image
-//                ,comments
-        );
+        return Objects.hash(id, title, description, price, author, image);
     }
 }

@@ -12,15 +12,13 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import javax.validation.ValidationException;
-import java.time.Instant;
-import java.time.LocalDateTime;
 
 /**
  * Имплементация сервиса для регистрации пользователя
  *
  * @author Одокиенко Екатерина
  */
-@Transactional
+
 @RequiredArgsConstructor
 @Service
 public class RegistrationServiceImpl implements RegistrationService {
@@ -29,11 +27,12 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final UserMapper  userMapper;
 
     @Override
-    public boolean register(RegisterReqDto registerReqDto) {
+    public boolean register(RegisterReqDto registerReqDto, Role role) {
         User user = userMapper.fromDto(registerReqDto);
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new ValidationException(String.format("Пользователь \"%s\" уже зарегистрирован!", user.getEmail()));
         }
+        user.setRole(role);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         return true;

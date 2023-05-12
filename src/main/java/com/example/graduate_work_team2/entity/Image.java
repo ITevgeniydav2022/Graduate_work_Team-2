@@ -25,23 +25,18 @@ public class Image {
      * поле - айди фото
      */
     @Id
-    private long id;
-    /**
-     * поле - размер фото
-     */
-    private long fileSize;
+    private String id;
+
     /**
      * поле - путь к фото
      */
     private String filePath;
-    /**
-     * поле - тип фото
-     */
-    private String mediaType;
+
     /**
      * поле - тип дата-данных фото
      */
     @Lob
+    @Column(name = "image")
     @Type(type = "org.hibernate.type.BinaryType")
     private byte[] data;
     /**
@@ -50,24 +45,21 @@ public class Image {
     @OneToOne
     private Ads ads;
 
-    /**
-     * поле - строкое представление сущности "Фото"
-     */
-    public String toString() {
-        return "Объявление: id = " + this.getId() + ", инфо = " + Arrays.toString((this.getData()));
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         Image image = (Image) o;
-        return Objects.equals(id, image.id);
+        return Objects.equals(id, image.id)
+                && Objects.equals(filePath, image.filePath)
+                && Arrays.equals(data, image.data)
+                && Objects.equals(ads, image.ads);
     }
-
 
     @Override
     public int hashCode() {
-       return getClass().hashCode();
+        int result = Objects.hash(id, filePath, ads);
+        result = 31 * result + Arrays.hashCode(data);
+        return result;
     }
 }

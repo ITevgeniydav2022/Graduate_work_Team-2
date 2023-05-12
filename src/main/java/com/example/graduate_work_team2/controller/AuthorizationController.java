@@ -46,7 +46,7 @@ public class AuthorizationController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginReqDto req) {
-        log.info("Запрос на авторизацию пользователя");
+        log.info("Был вызван метод контроллера для авторизовации пользователя");
         authorizationService.login(req.getUsername(), req.getPassword());
         return ResponseEntity.ok().build();
     }

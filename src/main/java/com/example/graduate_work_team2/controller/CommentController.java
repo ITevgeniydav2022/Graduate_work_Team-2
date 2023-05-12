@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,7 @@ import javax.validation.Valid;
  *
  * @author Одокиенко Екатерина
  */
+@Slf4j
 @CrossOrigin(value = "http://localhost:3000")
 @RequiredArgsConstructor
 @RestController
@@ -46,9 +48,10 @@ public class CommentController {
             }
     )
 
-    @GetMapping("/{adsId}/comments")
-    public ResponseEntity<ResponseWrapperComment> getAdsComments(@PathVariable Long adsId) {
-        ResponseWrapperComment responseWrapperComment=commentService.getCommentsDto(adsId);
+    @GetMapping("/{id}/comments")
+    public ResponseEntity<ResponseWrapperComment> getAdsComments(@PathVariable Integer id) {
+        log.info("Был вызван метод контроллера для получения комментария объявления");
+        ResponseWrapperComment responseWrapperComment=commentService.getCommentsDto(id);
         return ResponseEntity.ok().body(responseWrapperComment);
     }
     @Operation(summary = "Добавить комментарий к объявлению",
@@ -65,9 +68,10 @@ public class CommentController {
             }
     )
 
-    @PostMapping("/{adsId}/comments")
-    public ResponseEntity<CommentDto> addAdsComments(@PathVariable Long adsId, @RequestBody @Valid CommentDto commentDto) {
-        CommentDto newComDto = commentService.addAdsCommentsDto(adsId,commentDto);
+    @PostMapping("/{id}/comments")
+    public ResponseEntity<CommentDto> addAdsComments(@PathVariable Integer id, @RequestBody @Valid CommentDto commentDto) {
+        log.info("Был вызван метод контроллера для добавления комментария объявления");
+        CommentDto newComDto = commentService.addAdsCommentsDto(id,commentDto);
         return ResponseEntity.ok().body(newComDto);
     }
     @Operation(summary = "Удалить комментарий",
@@ -86,7 +90,8 @@ public class CommentController {
     )
 
     @DeleteMapping("/{adsId}/comments/{comId}")
-    public ResponseEntity<HttpStatus> deleteComment(@PathVariable Long adsId, @PathVariable Long comId) {
+    public ResponseEntity<HttpStatus> deleteComment(@PathVariable Integer adsId, @PathVariable Integer comId) {
+        log.info("Был вызван метод контроллера для удаления комментария объявления");
         if (commentService.deleteCommentDto(adsId, comId)) {
             return ResponseEntity.ok().build();
         }
@@ -108,9 +113,10 @@ public class CommentController {
     )
 
     @PatchMapping("/{adsId}/comments/{comId}")
-    public ResponseEntity<CommentDto> updateComment(@PathVariable Long adsId, @PathVariable Long comId,
+    public ResponseEntity<CommentDto> updateComment(@PathVariable Integer adsId, @PathVariable Integer comId,
                                                           @RequestBody CommentDto updateCommentDto,
                                                           Authentication authentication) {
+        log.info("Был вызван метод контроллера для изменения комментария объявления");
         CommentDto updatedCommentDto = commentService.updateComment(adsId, comId,
                 updateCommentDto, authentication);
         if (updateCommentDto.equals(updatedCommentDto)) {

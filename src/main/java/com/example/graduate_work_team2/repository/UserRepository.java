@@ -12,7 +12,7 @@ import java.util.Optional;
 
 /** Механизм для хранения, извлечения, обновления, удаления и поиска объектов. */
 @Repository
-public interface UserRepository extends JpaRepository<User,Long> {
+public interface UserRepository extends JpaRepository<User,Integer> {
     /**
      * Метод получения объекта класса "Пользователь" по его email.
      * @param email

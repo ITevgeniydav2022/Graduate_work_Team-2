@@ -1,21 +1,23 @@
 package com.example.graduate_work_team2.mapper.impl;
 
-import com.example.graduate_work_team2.dto.CreateUserDto;
 import com.example.graduate_work_team2.dto.RegisterReqDto;
 import com.example.graduate_work_team2.dto.UserDto;
 import com.example.graduate_work_team2.entity.User;
 import com.example.graduate_work_team2.mapper.UserMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
+@Slf4j
 
 @Component
 public class UserMapperImpl implements UserMapper {
 
     @Override
     public UserDto toDto(User entity) {
+        log.info("Был вызван метод маппера из User entity в UserDto");
         UserDto userDto = new UserDto();
-        userDto.setId(Math.toIntExact(entity.getId()));
+        userDto.setId(entity.getId());
         userDto.setEmail(entity.getEmail());
         userDto.setFirstName(entity.getFirstName());
         userDto.setLastName(entity.getLastName());
@@ -27,19 +29,22 @@ public class UserMapperImpl implements UserMapper {
 
     @Override
     public User fromDto(UserDto dto) {
+        log.info("Был вызван метод маппера из UserDto в User entity");
         User mappedUser = new User();
         mappedUser.setId(dto.getId());
         mappedUser.setEmail(dto.getEmail());
         mappedUser.setFirstName(dto.getFirstName());
         mappedUser.setLastName(dto.getLastName());
         mappedUser.setPhone(dto.getPhone());
-        mappedUser.getImage().setId(Long.parseLong(dto.getImage()));
+        mappedUser.getImage().setId(dto.getImage());
         return mappedUser;
     }
 
     @Override
     public User fromDto(RegisterReqDto dto) {
+        log.info("Был вызван метод маппера из RegisterReqDto в User entity");
         User mappedUser = new User();
+        mappedUser.setUsername(dto.getUsername());
         mappedUser.setPassword(dto.getPassword());
         mappedUser.setFirstName(dto.getFirstName());
         mappedUser.setLastName(dto.getLastName());
@@ -49,25 +54,4 @@ public class UserMapperImpl implements UserMapper {
         return mappedUser;
     }
 
-    @Override
-    public CreateUserDto toCreateUserDto(User entity) {
-        CreateUserDto mappedUserDto = new CreateUserDto();
-        mappedUserDto.setEmail(entity.getEmail());
-        mappedUserDto.setFirstName(entity.getFirstName());
-        mappedUserDto.setLastName(entity.getLastName());
-        mappedUserDto.setPassword(entity.getPassword());
-        mappedUserDto.setPhone(entity.getPhone());
-        return mappedUserDto;
-    }
-
-    @Override
-    public User createUserDtoToEntity(CreateUserDto dto) {
-        User mappedUser = new User();
-        mappedUser.setFirstName(dto.getFirstName());
-        mappedUser.setLastName(dto.getLastName());
-        mappedUser.setPassword(dto.getPassword());
-        mappedUser.setPhone(dto.getPhone());
-        mappedUser.setEmail(dto.getEmail());
-        return mappedUser;
-    }
 }

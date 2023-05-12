@@ -25,27 +25,30 @@ public class Comment {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @Column(nullable = false)
+    private int id;
     /**
      * поле - время создания комментария
      */
+    @Column(name = "add_date", length = 20, nullable = false)
     private LocalDateTime createdAt;
     /**
      * поле - текст комментария
      */
+    @Column(length = 1000, nullable = false)
     private String text;
     /**
      * поле - автор комментария
      */
     @ManyToOne
-    @JoinColumn(name = "author_id")
+    @JoinColumn(name = "author_id", nullable = false)
     private User author;
     /**
      * поле - объект сущности "Объявление"
      */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pk_ads")
-    private Ads ad;
+    @ManyToOne
+    @JoinColumn(name = "ad_id", nullable = false)
+    private Ads ads;
 
     @Override
     public boolean equals(Object o) {
@@ -58,7 +61,7 @@ public class Comment {
             return Objects.equals(createdAt, comment.createdAt)
                     && Objects.equals(text, comment.text)
                     && Objects.equals(author, comment.author)
-                    && Objects.equals(ad, comment.ad);
+                    && Objects.equals(ads, comment.ads);
         }
 
     }
@@ -68,6 +71,6 @@ public class Comment {
         if (id != 0) {
             return Objects.hash(id);
         }
-        return Objects.hash(id, createdAt, text, author, ad);
+        return Objects.hash(id, createdAt, text, author, ads);
     }
 }

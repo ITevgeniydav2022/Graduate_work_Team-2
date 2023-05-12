@@ -51,8 +51,10 @@ public class RegistrationController {
     )
 
     @PostMapping("/register")
-    public ResponseEntity<Void> register(@Valid @RequestBody RegisterReqDto req) {
-        if (registrationService.register(req)) {
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterReqDto req) {
+        log.info("Был вызван метод контроллера для регистрации пользователя");
+        Role role = req.getRole() ==null?USER:req.getRole();
+        if (registrationService.register(req,role)) {
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

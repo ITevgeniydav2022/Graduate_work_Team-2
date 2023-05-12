@@ -13,6 +13,6 @@ import org.springframework.stereotype.Repository;
 
 /** Механизм для хранения, извлечения, обновления, удаления и поиска объектов. */
 @Repository
-public interface AdsRepository extends JpaRepository<Ads, Long> {
+public interface AdsRepository extends JpaRepository<Ads, Integer> {
 
 }

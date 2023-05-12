@@ -26,7 +26,7 @@ public interface AdsService {
      * @return Ads
 
      */
-    AdsDto addAds(CreateAdsDto createAdsDto, MultipartFile imageFiles);
+    AdsDto addAds(CreateAdsDto createAdsDto, MultipartFile imageFiles) throws IOException;
 
     /**
      * Метод получения всех объявлений
@@ -53,7 +53,7 @@ public interface AdsService {
     /**
      * Метод получения DTO с полной информацией об объекте
      */
-    FullAdsDto getFullAdsDto(Long id);
+    FullAdsDto getFullAdsDto(Integer id);
 
     /**
      * Метод удаления объявления по его айди
@@ -62,7 +62,7 @@ public interface AdsService {
 
 
      */
-    boolean removeAdsById(Long adsId);
+    boolean removeAdsById(Integer adsId);
 
     /**
      * Метод редактирования объявления по его айди
@@ -71,6 +71,7 @@ public interface AdsService {
      * @param createAdsDto - измененное объявление
      * @return Ads
      */
-    AdsDto updateAdsDto(Long adsId, CreateAdsDto createAdsDto);
+    AdsDto updateAdsDto(Integer adsId, CreateAdsDto createAdsDto);
+    void updateAdsImage(Integer id, MultipartFile adsFile) throws IOException;
 
 }

@@ -10,7 +10,7 @@ public interface AuthorizationService {
      * @param password - пароль пользователя для входа в личный кабинет
      * @return
      */
-    void login(String userName, String password);
+    boolean login(String userName, String password);
 
 
 }

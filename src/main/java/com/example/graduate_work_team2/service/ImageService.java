@@ -7,6 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Optional;
 
 /**
  * Интерфейс сервиса для работы с фото в объявлениях
@@ -20,16 +21,16 @@ public interface ImageService {
      * @param imageFile - фото из объявления
      * @return Images
      */
-    Image uploadImage(MultipartFile imageFile);
+    Image uploadImage(MultipartFile imageFile) throws IOException;
 
     /**
      * Метод обновления фото объявления
      *
-     * @param imageFile - фото из объявления
-     * @param adsId     - айди объявления
+     * @param file - фото из объявления
+     * @param      - айди объявления
      * @throws IOException, если объект не был найден
      */
-    void updateImageAdsDto(Long adsId, MultipartFile imageFile);
+    Image updateImage(Image updateImage, MultipartFile file) throws IOException;
 
     /**
      * Метод получения фото по его айди
@@ -37,13 +38,13 @@ public interface ImageService {
      * @param id - айди фото
      * @return Images
      */
-    byte[] getImageById(Long id);
+    Image getImageById(Integer id);
 
-    /**
-     * Метод удаления фото по айди
-     *
-     * @param id - айди фото
-     * @throws IOException, если объект не был найден
-     */
-    void removeImage(Long id) throws IOException;
+//    /**
+//     * Метод удаления фото по айди
+//     *
+//     * @param  - айди фото
+//     * @throws IOException, если объект не был найден
+//     */
+//    void removeImage(Image image) ;
 }

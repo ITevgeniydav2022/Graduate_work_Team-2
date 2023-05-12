@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -25,6 +26,7 @@ import java.io.IOException;
  *
  * @author Одокиенко Екатерина
  */
+@Slf4j
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
 @RequiredArgsConstructor
@@ -51,6 +53,7 @@ public class UserController {
 
     @PostMapping("/set_password")
     public ResponseEntity<NewPasswordDto> setPassword(@Valid @RequestBody NewPasswordDto newPasswordDto) {
+        log.info("Был вызван метод контроллера для обновления пароля");
         userService.updatePassword(newPasswordDto.getNewPassword(), newPasswordDto.getCurrentPassword());
         return ResponseEntity.ok(newPasswordDto);
     }
@@ -71,6 +74,7 @@ public class UserController {
 
     @GetMapping("/users/me")
     public ResponseEntity<UserDto> getUser() {
+        log.info("Был вызван метод контроллера для получения информации об авторизованном пользователе");
         return ResponseEntity.ok(userService.getUserDto());
     }
 
@@ -89,6 +93,7 @@ public class UserController {
     )
     @PatchMapping("/users/me")
     public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userDto) {
+        log.info("Был вызван метод контроллера для обновления информации об авторизованном пользователе");
         return ResponseEntity.ok(userService.updateUserDto(userDto));
     }
 
@@ -107,7 +112,8 @@ public class UserController {
     )
 
     @PatchMapping(value = "/me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<byte []> updateUserImage(@RequestBody MultipartFile image){
+    public ResponseEntity<byte []> updateUserImage(@RequestBody MultipartFile image) throws IOException {
+        log.info("Был вызван метод контроллера для обновления аватара авторизованного пользователя");
         userService.updateUserImage(image);
         return ResponseEntity.ok().build();
     }

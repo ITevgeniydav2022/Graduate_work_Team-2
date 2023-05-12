@@ -3,28 +3,26 @@ package com.example.graduate_work_team2.mapper.impl;
 import com.example.graduate_work_team2.dto.CommentDto;
 import com.example.graduate_work_team2.entity.Comment;
 import com.example.graduate_work_team2.mapper.CommentMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Optional;
+@Slf4j
 @Component
 public class CommentMapperImpl implements CommentMapper{
     public Comment fromDto(CommentDto dto) {
+        log.info("Был вызван метод маппера из CommentDto в Comment entity");
         Comment mappedComment = new Comment();
         mappedComment.setId(dto.getPk());
-//        mappedComment.getAuthor().setId(dto.getAuthor());
-//        mappedComment.getAuthor().getImage().setImage(dto.getAuthorImage());
-//        mappedComment.getAuthor().setFirstName(dto.getAuthorFirstName());
-//        mappedComment.setCreatedAt(LocalDateTime.ofInstant(Instant.ofEpochMilli(dto.getCreatedAt()), ZoneId.systemDefault()));
         mappedComment.setText(dto.getText());
         return mappedComment;
     }
     public CommentDto toDto(Comment entity) {
+        log.info("Был вызван метод маппера из Comment entity в CommentDto");
         CommentDto commentDto = new CommentDto();
-        commentDto.setPk(Math.toIntExact(entity.getId()));
-        commentDto.setAuthor(Math.toIntExact(entity.getAuthor().getId()));
+        commentDto.setPk(entity.getId());
+        commentDto.setAuthor(entity.getAuthor().getId());
         Optional.ofNullable(entity.getAuthor().getImage()).ifPresent(image -> commentDto.setAuthorImage(
                 "/users/" + entity.getAuthor().getImage().getId() + "/image"));
         commentDto.setAuthorFirstName(entity.getAuthor().getFirstName());

@@ -1,6 +1,5 @@
 package com.example.graduate_work_team2.mapper;
 
-import com.example.graduate_work_team2.dto.CreateUserDto;
 import com.example.graduate_work_team2.dto.RegisterReqDto;
 import com.example.graduate_work_team2.dto.UserDto;
 import com.example.graduate_work_team2.entity.User;
@@ -17,7 +16,5 @@ public interface UserMapper {
 
     User fromDto(RegisterReqDto dto);
 
-    CreateUserDto toCreateUserDto(User entity);
 
-    User createUserDtoToEntity(CreateUserDto dto);
 }
