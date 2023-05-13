@@ -54,7 +54,7 @@ CRUD для объявлений на сайте: администратор м�
 - Прописать properties в файле **[application.properties](src/main/resources/application.properties)**
 - Запустить **[Docker](https://www.docker.com)**
 - Запустить **[Docker образ](https://drive.google.com/file/d/1UZTpeTAQpC4ANkHEFAGK2yjTFzZhXLPz/view)**
-- Запустить метод **main** в файле **[HomeworkApplication.java](src/main/java/ru/skypro/homework/HomeworkApplication.java)**
+- Запустить метод **main** в файле **[HomeworkApplication.java](src/main/java/com/example/graduate_work_team2/GraduateWorkTeam2Application.java)**
 
 После выполнения всех действий сайт будет доступен по ссылке http://localhost:3000 и Swagger по [ссылке](https://editor.swagger.io/).
 
