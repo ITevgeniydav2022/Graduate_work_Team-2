@@ -72,7 +72,7 @@ public class UserController {
             }
     )
 
-    @GetMapping("/users/me")
+    @GetMapping("/me")
     public ResponseEntity<UserDto> getUser() {
         log.info("Был вызван метод контроллера для получения информации об авторизованном пользователе");
         return ResponseEntity.ok(userService.getUserDto());
@@ -91,7 +91,7 @@ public class UserController {
                     @ApiResponse(responseCode = "401", description = "Для доступа к запрашиваемому ресурсу требуется аутентификация", content = @Content())
             }
     )
-    @PatchMapping("/users/me")
+    @PatchMapping("/me")
     public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userDto) {
         log.info("Был вызван метод контроллера для обновления информации об авторизованном пользователе");
         return ResponseEntity.ok(userService.updateUserDto(userDto));

@@ -1,6 +1,7 @@
 package com.example.graduate_work_team2.configuration;
 
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -19,6 +20,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Slf4j
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 
 public class WebSecurityConfig  {
     /**
@@ -33,7 +35,7 @@ public class WebSecurityConfig  {
             "/ads", "/ads/*/image",
             "/users", "/users/*/image"
     };
-//   private final MyUserDetailsService myUserDetailsService;
+    private final MyUserDetailsService myUserDetailsService;
 //
 //    public WebSecurityConfig(MyUserDetailsService myUserDetailsService) {
 //        this.myUserDetailsService = myUserDetailsService;
@@ -79,7 +81,7 @@ public class WebSecurityConfig  {
                                 .mvcMatchers(AUTH_WHITELIST).permitAll()
                                 .mvcMatchers("/ads/**", "/users/**").authenticated()
                 )
-                .httpBasic(withDefaults())
+                .httpBasic(withDefaults()).userDetailsService(myUserDetailsService)
                 .build();
     }
 
