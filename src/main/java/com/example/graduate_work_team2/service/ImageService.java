@@ -38,7 +38,7 @@ public interface ImageService {
      * @param id - айди фото
      * @return Images
      */
-    Image getImageById(Integer id);
+    Image getImageById(String id);
 
 //    /**
 //     * Метод удаления фото по айди

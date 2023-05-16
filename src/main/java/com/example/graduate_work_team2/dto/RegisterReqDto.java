@@ -22,6 +22,5 @@ public class RegisterReqDto {
 
     /**роль пользователя**/
     private Role role;
-
 }
 

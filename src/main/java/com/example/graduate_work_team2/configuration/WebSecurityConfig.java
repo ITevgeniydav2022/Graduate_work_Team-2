@@ -21,8 +21,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-
-public class WebSecurityConfig  {
+public class WebSecurityConfig {
     /**
      * Список аутентификаций
      **/
@@ -65,11 +64,12 @@ public class WebSecurityConfig  {
 //        auth.userDetailsService(userDetailsService()).passwordEncoder(passwordEncoder());
 //    }
 //
+
     /**
      * Цепочка фильтров безопасности
      **/
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http)  throws Exception{
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .cors()
                 .and()
@@ -79,7 +79,7 @@ public class WebSecurityConfig  {
                                 .mvcMatchers(HttpMethod.GET, "/ads").permitAll()
                                 .mvcMatchers(HttpMethod.GET, "/ads/images/**").permitAll()
                                 .mvcMatchers(AUTH_WHITELIST).permitAll()
-                                .mvcMatchers("/ads/**", "/users/**").authenticated()
+                                .mvcMatchers("/ads/**", "/users/**").permitAll()
                 )
                 .httpBasic(withDefaults()).userDetailsService(myUserDetailsService)
                 .build();

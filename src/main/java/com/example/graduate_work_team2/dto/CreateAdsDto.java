@@ -14,4 +14,5 @@ public class CreateAdsDto {
 
     /**заголовок объявления**/
     private String title;
+
 }

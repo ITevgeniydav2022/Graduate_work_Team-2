@@ -73,4 +73,5 @@ public class Comment {
         }
         return Objects.hash(id, createdAt, text, author, ads);
     }
+
 }

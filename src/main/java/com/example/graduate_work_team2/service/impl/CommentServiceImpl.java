@@ -19,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -40,10 +39,15 @@ public class CommentServiceImpl implements CommentService {
     private  final UserService userService;
     private final AdsService adsService;
     private final AdsRepository adsRepository;
+
+    @Override
+    public Comment findById(int id) {
+        return commentRepository.findById(id).orElse(null);
+    }
     @Override
     public CommentDto updateComment(Integer adsId, Integer comId, CommentDto updateComment, Authentication authentication) {
         log.info("Был вызван метод изменения комментария. ");
-        Comment updatedComment = commentRepository.findById(adsId)
+        Comment updatedComment = commentRepository.findById(comId)
                 .orElseThrow(() -> new CommentNotFoundException("Комментарий с id " + adsId + " не найден!"));
         User user = userRepository.findByEmail(authentication.getName()).orElseThrow();
         if (updatedComment.getAuthor().getEmail().equals(user.getEmail()) || user.getRole().getAuthority().equals("ADMIN")) {

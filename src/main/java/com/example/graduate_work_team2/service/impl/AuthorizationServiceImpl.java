@@ -30,7 +30,6 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 //        if (!passwordEncoder.matches(password, user.getPassword())) {
 //            throw new BadCredentialsException("Неверно указан пароль!");
 //        }
-
     }
 
 }

@@ -2,6 +2,8 @@ package com.example.graduate_work_team2.controller;
 
 import com.example.graduate_work_team2.dto.NewPasswordDto;
 import com.example.graduate_work_team2.dto.UserDto;
+import com.example.graduate_work_team2.entity.User;
+import com.example.graduate_work_team2.exception.UserNotFoundException;
 import com.example.graduate_work_team2.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -73,9 +75,9 @@ public class UserController {
     )
 
     @GetMapping("/me")
-    public ResponseEntity<UserDto> getUser() {
+    public UserDto getUser() {
         log.info("Был вызван метод контроллера для получения информации об авторизованном пользователе");
-        return ResponseEntity.ok(userService.getUserDto());
+        return userService.getUserDto();
     }
 
     @Operation(summary = "Обновить информацию об авторизованном пользователе",
@@ -91,7 +93,7 @@ public class UserController {
                     @ApiResponse(responseCode = "401", description = "Для доступа к запрашиваемому ресурсу требуется аутентификация", content = @Content())
             }
     )
-    @PatchMapping("/me")
+    @PatchMapping("/users/me")
     public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userDto) {
         log.info("Был вызван метод контроллера для обновления информации об авторизованном пользователе");
         return ResponseEntity.ok(userService.updateUserDto(userDto));
@@ -112,10 +114,17 @@ public class UserController {
     )
 
     @PatchMapping(value = "/me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<byte []> updateUserImage(@RequestBody MultipartFile image) throws IOException {
+    public ResponseEntity<byte []> updateUserImage(@RequestParam MultipartFile image) throws IOException {
         log.info("Был вызван метод контроллера для обновления аватара авторизованного пользователя");
         userService.updateUserImage(image);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{id}/image")
+    public ResponseEntity<byte[]> getImageFromAuthUser(@PathVariable String id) {
+        User user = userService.findAuthorizationUser().orElseThrow(UserNotFoundException::new);
+        byte[] i = user.getImage().getData();
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM).body(i);
     }
 
 }

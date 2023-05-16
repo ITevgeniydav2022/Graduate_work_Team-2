@@ -17,5 +17,4 @@ public interface AdsMapper {
     FullAdsDto toFullAdsDto(Ads entity);
     Ads fromDto(CreateAdsDto dto);
     Collection<AdsDto> toDto(Collection<Ads> adsCollection);
-
 }

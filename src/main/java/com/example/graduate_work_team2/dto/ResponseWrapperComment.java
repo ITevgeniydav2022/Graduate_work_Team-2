@@ -27,6 +27,5 @@ public class ResponseWrapperComment {
     public ResponseWrapperComment(Collection<CommentDto> results) {
         this.count=results.size();
         this.results=results;
-
     }
 }

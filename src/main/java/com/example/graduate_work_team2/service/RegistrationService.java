@@ -12,4 +12,5 @@ public interface RegistrationService {
      * @param registerReqDto - объект Dto зарегистрированного пользователя
      */
     boolean register(RegisterReqDto registerReqDto,Role role);
+
 }

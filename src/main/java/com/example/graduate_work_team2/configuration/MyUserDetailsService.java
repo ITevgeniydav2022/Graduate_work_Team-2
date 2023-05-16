@@ -24,5 +24,4 @@ public class MyUserDetailsService implements UserDetailsService {
 //        return userRepository.findByEmail(email).orElseThrow(() ->
 //                new UsernameNotFoundException(String.format("Пользователь с email: \"%s\" не найден", email)));
 //    }
-
 }

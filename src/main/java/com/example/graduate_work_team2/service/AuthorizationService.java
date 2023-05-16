@@ -12,5 +12,4 @@ public interface AuthorizationService {
      */
     boolean login(String userName, String password);
 
-
 }

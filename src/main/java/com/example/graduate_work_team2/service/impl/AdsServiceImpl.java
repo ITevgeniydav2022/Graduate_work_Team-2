@@ -3,31 +3,23 @@ package com.example.graduate_work_team2.service.impl;
 
 import com.example.graduate_work_team2.dto.*;
 import com.example.graduate_work_team2.entity.Ads;
-import com.example.graduate_work_team2.entity.Comment;
 import com.example.graduate_work_team2.entity.Image;
 import com.example.graduate_work_team2.entity.User;
 import com.example.graduate_work_team2.exception.AdsNotFoundException;
 import com.example.graduate_work_team2.exception.UserNotFoundException;
 import com.example.graduate_work_team2.mapper.AdsMapper;
 import com.example.graduate_work_team2.repository.AdsRepository;
-import com.example.graduate_work_team2.repository.CommentRepository;
-import com.example.graduate_work_team2.repository.ImageRepository;
-import com.example.graduate_work_team2.repository.UserRepository;
 import com.example.graduate_work_team2.service.AdsService;
 import com.example.graduate_work_team2.service.ImageService;
 import com.example.graduate_work_team2.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 
-import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Имплементация сервиса для работы с объявлением
@@ -44,6 +36,11 @@ public class AdsServiceImpl implements AdsService {
     private final AdsMapper adsMapper;
     private final UserService userService;
 
+
+    @Override
+    public Ads findById(int id) {
+        return adsRepository.findById(id).orElse(null);
+    }
 
     @Override
     public ResponseWrapperAds getAllAdsDto() {
@@ -118,7 +115,7 @@ public class AdsServiceImpl implements AdsService {
     public void updateAdsImage(Integer id, MultipartFile adsFile) throws IOException {
         Ads ads = adsRepository.findById(id).orElseThrow(() ->
                 new AdsNotFoundException("Объявление с id " + id + " не найдено!"));
-        Image imageUpdate = imageService.updateImage(ads.getImage(),adsFile);
+        Image imageUpdate = imageService.updateImage(ads.getImage(), adsFile);
         ads.setImage(imageUpdate);
         adsRepository.save(ads);
     }

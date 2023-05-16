@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -33,7 +34,7 @@ import java.util.Optional;
 //@Transactional
 @RequiredArgsConstructor
 @Service
-public class UserServiceImpl implements UserService, UserDetailsService{
+public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
@@ -49,20 +50,16 @@ public class UserServiceImpl implements UserService, UserDetailsService{
     @Override
     public Optional<User> findAuthorizationUser() {
         log.info("Был вызван метод получения авторизованного пользователя");
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String correctName = authentication.getName();
-        return userRepository.findByEmail(correctName);
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+        return userRepository.findByEmail(authentication.getName());
     }
 
     @Override
     public UserDto getUserDto() {
         log.info("Был вызван метод получения пользователя из БД, конвертирующий его в ДТО");
-        Optional<User> correctUser = findAuthorizationUser();
-        UserDto correctUserDto = new UserDto();
-        if (correctUser.isPresent()) {
-            correctUserDto = userMapper.toDto(correctUser.get());
-        }
-        return correctUserDto;
+        User correctUser = findAuthorizationUser().orElse(null);
+        return userMapper.toDto(correctUser);
     }
 
     @Override
@@ -108,10 +105,9 @@ public class UserServiceImpl implements UserService, UserDetailsService{
                 throw new RuntimeException(e);
             }
         } else {
-            Image savedImage = imageService.updateImage(imageBefore,image);
+            Image savedImage = imageService.updateImage(imageBefore, image);
             user.setImage(savedImage);
         }
         userRepository.save(user);
     }
-
 }

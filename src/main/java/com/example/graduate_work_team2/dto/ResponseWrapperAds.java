@@ -27,6 +27,5 @@ public class ResponseWrapperAds {
     public ResponseWrapperAds(Collection<AdsDto> results) {
         this.count=results.size();
         this.results = results;
-
     }
 }

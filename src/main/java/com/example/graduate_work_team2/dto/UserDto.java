@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
- /**Класс, описывающий параметры пользователя**/
+/**Класс, описывающий параметры пользователя**/
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -28,6 +28,5 @@ public class UserDto {
 
     /**ссылка на аватар пользователя**/
     private String image;
-
 }
 

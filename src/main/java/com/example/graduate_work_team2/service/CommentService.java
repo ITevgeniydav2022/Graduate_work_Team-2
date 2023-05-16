@@ -2,6 +2,7 @@ package com.example.graduate_work_team2.service;
 
 import com.example.graduate_work_team2.dto.CommentDto;
 import com.example.graduate_work_team2.dto.ResponseWrapperComment;
+import com.example.graduate_work_team2.entity.Comment;
 import org.springframework.security.core.Authentication;
 
 
@@ -11,6 +12,8 @@ import org.springframework.security.core.Authentication;
  * @author Одокиенко Екатерина
  */
 public interface CommentService {
+    Comment findById(int id);
+
     /**
      * Метод редактирования комментария по айди
      *
@@ -39,7 +42,7 @@ public interface CommentService {
      * @param adsId - айди объявления
      * @return Collection<Comment>
      */
-   ResponseWrapperComment getCommentsDto(Integer adsId);
+    ResponseWrapperComment getCommentsDto(Integer adsId);
 
     /**
      * Метод добавления комментария в объявлении по айди объявления

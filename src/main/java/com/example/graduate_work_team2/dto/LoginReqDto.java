@@ -9,6 +9,5 @@ public class LoginReqDto {
 
     /**логин**/
     private String username;
-
 }
 

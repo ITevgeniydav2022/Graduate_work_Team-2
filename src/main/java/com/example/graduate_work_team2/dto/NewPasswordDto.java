@@ -10,4 +10,5 @@ public class NewPasswordDto {
 
     /**новый пароль**/
     private String newPassword;
+
 }

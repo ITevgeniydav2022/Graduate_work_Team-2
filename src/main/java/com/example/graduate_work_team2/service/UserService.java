@@ -51,5 +51,4 @@ public interface UserService {
      * @param image - новое фото
      */
     void updateUserImage(MultipartFile image) throws IOException;
-
 }

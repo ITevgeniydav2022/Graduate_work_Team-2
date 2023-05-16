@@ -23,5 +23,4 @@ public interface UserRepository extends JpaRepository<User,Integer> {
      * @param email
      */
     boolean existsByEmail(String email);
-
 }

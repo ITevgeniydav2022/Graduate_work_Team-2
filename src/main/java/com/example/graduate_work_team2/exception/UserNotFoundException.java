@@ -15,4 +15,5 @@ public class UserNotFoundException extends RuntimeException{
 
         super("У авторизованного пользователя нет доступа к ресурсу!");
     }
+
 }

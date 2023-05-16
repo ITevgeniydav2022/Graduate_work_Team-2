@@ -31,5 +31,4 @@ public class FullAdsDto {
 
     /**заголовок объявления**/
     private String title;
-
 }

@@ -24,7 +24,7 @@ public class CommentMapperImpl implements CommentMapper{
         commentDto.setPk(entity.getId());
         commentDto.setAuthor(entity.getAuthor().getId());
         Optional.ofNullable(entity.getAuthor().getImage()).ifPresent(image -> commentDto.setAuthorImage(
-                "/users/" + entity.getAuthor().getImage().getId() + "/image"));
+                "/comments/" + entity.getId() + "/image"));
         commentDto.setAuthorFirstName(entity.getAuthor().getFirstName());
         commentDto.setCreatedAt(entity.getCreatedAt().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
 

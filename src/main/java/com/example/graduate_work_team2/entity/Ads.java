@@ -75,4 +75,5 @@ public class Ads {
         }
         return Objects.hash(id, title, description, price, author, image);
     }
+
 }

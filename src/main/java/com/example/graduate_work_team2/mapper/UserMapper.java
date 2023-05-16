@@ -16,5 +16,4 @@ public interface UserMapper {
 
     User fromDto(RegisterReqDto dto);
 
-
 }

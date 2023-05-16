@@ -4,6 +4,7 @@ import com.example.graduate_work_team2.dto.CommentDto;
 import com.example.graduate_work_team2.dto.ResponseWrapperComment;
 import com.example.graduate_work_team2.entity.Comment;
 import com.example.graduate_work_team2.service.CommentService;
+import com.example.graduate_work_team2.service.ImageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -29,10 +30,10 @@ import javax.validation.Valid;
 @CrossOrigin(value = "http://localhost:3000")
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/comments")
 @Tag(name = "Комментарий", description = "CommentController")
 public class CommentController {
     private final CommentService commentService;
+    private final ImageService imageService;
 
     @Operation(summary = "Получить комментарии объявления",
             responses = {
@@ -44,16 +45,17 @@ public class CommentController {
                                     schema = @Schema(implementation = CommentDto[].class)
                             )
                     ),
-                    @ApiResponse(responseCode = "401",description = "Ошибочный ввод имени и/или пароля", content = @Content())
+                    @ApiResponse(responseCode = "401", description = "Ошибочный ввод имени и/или пароля", content = @Content())
             }
     )
 
-    @GetMapping("/{id}/comments")
+    @GetMapping("ads/{id}/comments")
     public ResponseEntity<ResponseWrapperComment> getAdsComments(@PathVariable Integer id) {
         log.info("Был вызван метод контроллера для получения комментария объявления");
-        ResponseWrapperComment responseWrapperComment=commentService.getCommentsDto(id);
+        ResponseWrapperComment responseWrapperComment = commentService.getCommentsDto(id);
         return ResponseEntity.ok().body(responseWrapperComment);
     }
+
     @Operation(summary = "Добавить комментарий к объявлению",
             responses = {
                     @ApiResponse(
@@ -64,16 +66,17 @@ public class CommentController {
                                     schema = @Schema(implementation = CommentDto.class)
                             )
                     ),
-                    @ApiResponse(responseCode = "401",description = "Ошибочный ввод имени и/или пароля", content = @Content())
+                    @ApiResponse(responseCode = "401", description = "Ошибочный ввод имени и/или пароля", content = @Content())
             }
     )
 
-    @PostMapping("/{id}/comments")
+    @PostMapping("ads/{id}/comments")
     public ResponseEntity<CommentDto> addAdsComments(@PathVariable Integer id, @RequestBody @Valid CommentDto commentDto) {
         log.info("Был вызван метод контроллера для добавления комментария объявления");
-        CommentDto newComDto = commentService.addAdsCommentsDto(id,commentDto);
+        CommentDto newComDto = commentService.addAdsCommentsDto(id, commentDto);
         return ResponseEntity.ok().body(newComDto);
     }
+
     @Operation(summary = "Удалить комментарий",
             responses = {
                     @ApiResponse(
@@ -84,12 +87,12 @@ public class CommentController {
                                     schema = @Schema(implementation = CommentDto.class)
                             )
                     ),
-                    @ApiResponse(responseCode = "401",description = "Ошибочный ввод имени и/или пароля", content = @Content()),
-                    @ApiResponse(responseCode = "403",description = "Доступ к запрошенному ресурсу запрещен", content = @Content())
+                    @ApiResponse(responseCode = "401", description = "Ошибочный ввод имени и/или пароля", content = @Content()),
+                    @ApiResponse(responseCode = "403", description = "Доступ к запрошенному ресурсу запрещен", content = @Content())
             }
     )
 
-    @DeleteMapping("/{adsId}/comments/{comId}")
+    @DeleteMapping("ads/{adsId}/comments/{comId}")
     public ResponseEntity<HttpStatus> deleteComment(@PathVariable Integer adsId, @PathVariable Integer comId) {
         log.info("Был вызван метод контроллера для удаления комментария объявления");
         if (commentService.deleteCommentDto(adsId, comId)) {
@@ -97,6 +100,7 @@ public class CommentController {
         }
         return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).build();
     }
+
     @Operation(summary = "Обновить комментарий",
             responses = {
                     @ApiResponse(
@@ -107,21 +111,27 @@ public class CommentController {
                                     schema = @Schema(implementation = CommentDto.class)
                             )
                     ),
-                    @ApiResponse(responseCode = "401",description = "Ошибочный ввод имени и/или пароля", content = @Content()),
-                    @ApiResponse(responseCode = "403",description = "Доступ к запрошенному ресурсу запрещен", content = @Content())
+                    @ApiResponse(responseCode = "401", description = "Ошибочный ввод имени и/или пароля", content = @Content()),
+                    @ApiResponse(responseCode = "403", description = "Доступ к запрошенному ресурсу запрещен", content = @Content())
             }
     )
 
-    @PatchMapping("/{adsId}/comments/{comId}")
-    public ResponseEntity<CommentDto> updateComment(@PathVariable Integer adsId, @PathVariable Integer comId,
-                                                          @RequestBody CommentDto updateCommentDto,
-                                                          Authentication authentication) {
+    @PatchMapping("ads/{adsId}/comments/{commentId}")
+    public ResponseEntity<CommentDto> updateComment(@PathVariable Integer adsId, @PathVariable Integer commentId,
+                                                    @RequestBody CommentDto updateCommentDto,
+                                                    Authentication authentication) {
         log.info("Был вызван метод контроллера для изменения комментария объявления");
-        CommentDto updatedCommentDto = commentService.updateComment(adsId, comId,
+        CommentDto updatedCommentDto = commentService.updateComment(adsId, commentId,
                 updateCommentDto, authentication);
         if (updateCommentDto.equals(updatedCommentDto)) {
             return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).build();
         }
         return ResponseEntity.ok(updatedCommentDto);
+    }
+
+    @GetMapping("/comments/{id}/image")
+    public ResponseEntity<byte[]> getImageToComment(@PathVariable int id) {
+        byte[] i = commentService.findById(id).getAuthor().getImage().getData();
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM).body(i);
     }
 }

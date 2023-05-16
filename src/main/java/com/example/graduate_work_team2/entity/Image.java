@@ -35,9 +35,8 @@ public class Image {
     /**
      * поле - тип дата-данных фото
      */
-    @Lob
-    @Column(name = "image")
-    @Type(type = "org.hibernate.type.BinaryType")
+
+    @Column(name = "page")
     private byte[] data;
     /**
      * поле - объект сущности "Объявление"

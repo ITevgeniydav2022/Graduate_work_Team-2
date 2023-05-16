@@ -28,6 +28,8 @@ public interface AdsService {
      */
     AdsDto addAds(CreateAdsDto createAdsDto, MultipartFile imageFiles) throws IOException;
 
+    Ads findById(int id);
+
     /**
      * Метод получения всех объявлений
      *
@@ -40,7 +42,7 @@ public interface AdsService {
      *
      * @return Collection<Ads>
      */
-   ResponseWrapperAds getAdsMe();
+    ResponseWrapperAds getAdsMe();
 
 //    /**
 //     * Метод получения объявления по его айди

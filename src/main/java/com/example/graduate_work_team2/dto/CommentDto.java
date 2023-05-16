@@ -23,5 +23,4 @@ public class CommentDto {
 
     /**текст комментария**/
     private String text;
-
 }

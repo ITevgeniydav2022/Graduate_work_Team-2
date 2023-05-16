@@ -14,4 +14,5 @@ public class AdsNotFoundException extends RuntimeException{
     public AdsNotFoundException(String s) {
         super();
     }
+
 }

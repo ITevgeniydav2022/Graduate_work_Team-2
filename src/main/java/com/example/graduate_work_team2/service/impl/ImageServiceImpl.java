@@ -44,7 +44,7 @@ public class ImageServiceImpl implements ImageService {
     public Image uploadImage(MultipartFile imageFile) throws IOException {
         Image image = new Image();
         byte[] bytes = imageFile.getBytes();
-        image.setFilePath(Arrays.toString(bytes));
+        // image.setFilePath(Arrays.toString(bytes));
         image.setId(UUID.randomUUID().toString());
         return imageRepository.saveAndFlush(image);
     }
@@ -58,9 +58,9 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public Image getImageById(Integer id) {
+    public Image getImageById(String id) {
         log.info("Был вызван метод получения изображения по id пользователя. ");
-        return imageRepository.findById(String.valueOf(id)).orElseThrow(() ->
+        return imageRepository.findById(id).orElseThrow(() ->
                 new NotFoundException("Картинка с id " + id + " не найдена!"));
     }
 

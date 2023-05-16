@@ -57,7 +57,7 @@ public class AdsController {
         log.info("Был вызван метод контроллера для получения всех объявлений");
         return ResponseEntity.ok(adsService.getAllAdsDto());
     }
-//    @SneakyThrows
+    //    @SneakyThrows
     @Operation(summary = "Добавить объявление",
             responses = {
                     @ApiResponse(
@@ -73,10 +73,12 @@ public class AdsController {
     )
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<AdsDto> addAds(@RequestPart("dto") CreateAdsDto dto,
-                                         @RequestPart("image") MultipartFile image) throws IOException {
+    public ResponseEntity<AdsDto> addAds(@RequestPart(name = "image")
+                                         MultipartFile image,
+                                         @RequestPart(name = "properties")
+                                         CreateAdsDto properties) throws IOException {
         log.info("Был вызван метод контроллера для добавления объявления");
-        return ResponseEntity.ok(adsService.addAds(dto, image));
+        return ResponseEntity.ok(adsService.addAds(properties, image));
     }
     @Operation(summary = "Получить информацию об объявлении",
             responses = {
@@ -132,7 +134,7 @@ public class AdsController {
     public ResponseEntity<AdsDto> updateAds(@PathVariable Integer id,
                                             @RequestBody CreateAdsDto createAdsDto) {
         log.info("Был вызван метод контроллера для изменения объявления");
-                return ResponseEntity.ok(adsService.updateAdsDto(id,createAdsDto));
+        return ResponseEntity.ok(adsService.updateAdsDto(id,createAdsDto));
     }
     @Operation(summary = "Получить объявления авторизованного пользователя",
             responses = {
@@ -172,11 +174,17 @@ public class AdsController {
     public ResponseEntity<byte []> updateAdsImage(@PathVariable Integer id,
                                                   @Parameter(in = ParameterIn.DEFAULT,
                                                           description = "Загрузите сюда новое изображение",
-            schema = @Schema())
-    @RequestPart(value = "image") @Valid MultipartFile image) throws IOException {
+                                                          schema = @Schema())
+                                                  @RequestPart(value = "image") @Valid MultipartFile image) throws IOException {
         log.info("Был вызван метод контроллера для обновления картинки объявления");
         adsService.updateAdsImage(id,image);
         return ResponseEntity.ok().build();
     }
+    @GetMapping("/{id}/image")
+    public ResponseEntity<byte[]> getImageFromAuthUser(@PathVariable int id) {
+        byte[] i = adsService.findById(id).getImage().getData();
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM).body(i);
+    }
 
 }
+

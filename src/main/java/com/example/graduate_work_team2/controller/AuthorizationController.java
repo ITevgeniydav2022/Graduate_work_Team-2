@@ -50,4 +50,5 @@ public class AuthorizationController {
         authorizationService.login(req.getUsername(), req.getPassword());
         return ResponseEntity.ok().build();
     }
+
 }

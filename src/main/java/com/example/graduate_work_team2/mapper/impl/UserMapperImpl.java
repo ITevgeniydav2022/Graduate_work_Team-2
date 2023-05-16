@@ -15,6 +15,7 @@ public class UserMapperImpl implements UserMapper {
 
     @Override
     public UserDto toDto(User entity) {
+        System.out.println("Был вызван метод маппера из User entity в UserDto"  );
         log.info("Был вызван метод маппера из User entity в UserDto");
         UserDto userDto = new UserDto();
         userDto.setId(entity.getId());
