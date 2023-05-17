@@ -3,9 +3,11 @@ package com.example.graduate_work_team2.dto;
 import lombok.Data;
 
 @Data
-public class LoginReq {
+public class LoginReqDto {
+    /**пароль**/
     private String password;
-    private String username;
 
+    /**логин**/
+    private String username;
 }
 
