@@ -25,11 +25,6 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         log.info("Был вызван метод введения пароля");
         UserDetails user = userService.loadUserByUsername(username);
         return passwordEncoder.matches(password, user.getPassword());
-//
-//
-//        if (!passwordEncoder.matches(password, user.getPassword())) {
-//            throw new BadCredentialsException("Неверно указан пароль!");
-//        }
     }
 
 }

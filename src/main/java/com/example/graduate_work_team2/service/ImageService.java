@@ -1,13 +1,9 @@
 package com.example.graduate_work_team2.service;
 
-import com.example.graduate_work_team2.dto.AdsDto;
-
 import com.example.graduate_work_team2.entity.Image;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Optional;
 
 /**
  * Интерфейс сервиса для работы с фото в объявлениях
@@ -40,11 +36,4 @@ public interface ImageService {
      */
     Image getImageById(String id);
 
-//    /**
-//     * Метод удаления фото по айди
-//     *
-//     * @param  - айди фото
-//     * @throws IOException, если объект не был найден
-//     */
-//    void removeImage(Image image) ;
 }

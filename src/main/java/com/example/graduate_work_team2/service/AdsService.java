@@ -5,11 +5,9 @@ import com.example.graduate_work_team2.dto.CreateAdsDto;
 import com.example.graduate_work_team2.dto.FullAdsDto;
 import com.example.graduate_work_team2.dto.ResponseWrapperAds;
 import com.example.graduate_work_team2.entity.Ads;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Collection;
 
 /**
  * Интерфейс сервиса для работы с объявлениями
@@ -43,14 +41,6 @@ public interface AdsService {
      * @return Collection<Ads>
      */
     ResponseWrapperAds getAdsMe();
-
-//    /**
-//     * Метод получения объявления по его айди
-//     *
-//     * @param adsId - айди объявления
-//     * @return Ads
-//     */
-//    Ads getAdsById(long adsId);
 
     /**
      * Метод получения DTO с полной информацией об объекте

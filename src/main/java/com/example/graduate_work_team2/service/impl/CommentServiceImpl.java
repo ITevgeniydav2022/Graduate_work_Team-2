@@ -68,9 +68,7 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = commentRepository.findById(comId)
                 .orElseThrow(() -> new CommentNotFoundException("Комментарий с id " + comId + " не найден!"));
         Optional<User> user = userService.findAuthorizationUser();
-//        User simpleUser = user.get();
-//        String correctUser = simpleUser.getUsername();
-        if (comment.getAuthor().getEmail().equals(user.get().getEmail()) ) {
+        if (comment.getAuthor().getEmail().equals(user.get().getEmail()) || user.get().getRole().getAuthority().equals("ADMIN")) {
             if (comment.getAds().getId() != adsId) {
                 throw new CommentNotFoundException("Комментарий с id " + comId+ " не принадлежит объявлению с id " + adsId);
             }

@@ -56,7 +56,7 @@ public class AdsServiceImpl implements AdsService {
         newAds.setAuthor(userService.findAuthorizationUser().orElseThrow(UserNotFoundException::new));
         Image newImage = imageService.uploadImage(imageFiles);
         newAds.setImage(newImage);
-        adsRepository.save(newAds);
+        newAds = adsRepository.save(newAds);
         log.info("Объявление добавлено!");
         return adsMapper.toDto(newAds);
     }

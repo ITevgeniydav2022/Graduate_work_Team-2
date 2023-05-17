@@ -2,7 +2,6 @@ package com.example.graduate_work_team2.controller;
 
 import com.example.graduate_work_team2.dto.CommentDto;
 import com.example.graduate_work_team2.dto.ResponseWrapperComment;
-import com.example.graduate_work_team2.entity.Comment;
 import com.example.graduate_work_team2.service.CommentService;
 import com.example.graduate_work_team2.service.ImageService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,6 +29,7 @@ import javax.validation.Valid;
 @CrossOrigin(value = "http://localhost:3000")
 @RequiredArgsConstructor
 @RestController
+@RequestMapping("/ads")
 @Tag(name = "Комментарий", description = "CommentController")
 public class CommentController {
     private final CommentService commentService;
@@ -49,7 +49,7 @@ public class CommentController {
             }
     )
 
-    @GetMapping("ads/{id}/comments")
+    @GetMapping("/{id}/comments")
     public ResponseEntity<ResponseWrapperComment> getAdsComments(@PathVariable Integer id) {
         log.info("Был вызван метод контроллера для получения комментария объявления");
         ResponseWrapperComment responseWrapperComment = commentService.getCommentsDto(id);
@@ -70,7 +70,7 @@ public class CommentController {
             }
     )
 
-    @PostMapping("ads/{id}/comments")
+    @PostMapping("/{id}/comments")
     public ResponseEntity<CommentDto> addAdsComments(@PathVariable Integer id, @RequestBody @Valid CommentDto commentDto) {
         log.info("Был вызван метод контроллера для добавления комментария объявления");
         CommentDto newComDto = commentService.addAdsCommentsDto(id, commentDto);
@@ -92,7 +92,7 @@ public class CommentController {
             }
     )
 
-    @DeleteMapping("ads/{adsId}/comments/{comId}")
+    @DeleteMapping("{adsId}/comments/{comId}")
     public ResponseEntity<HttpStatus> deleteComment(@PathVariable Integer adsId, @PathVariable Integer comId) {
         log.info("Был вызван метод контроллера для удаления комментария объявления");
         if (commentService.deleteCommentDto(adsId, comId)) {
@@ -116,16 +116,13 @@ public class CommentController {
             }
     )
 
-    @PatchMapping("ads/{adsId}/comments/{commentId}")
+    @PatchMapping("{adsId}/comments/{commentId}")
     public ResponseEntity<CommentDto> updateComment(@PathVariable Integer adsId, @PathVariable Integer commentId,
                                                     @RequestBody CommentDto updateCommentDto,
                                                     Authentication authentication) {
         log.info("Был вызван метод контроллера для изменения комментария объявления");
         CommentDto updatedCommentDto = commentService.updateComment(adsId, commentId,
                 updateCommentDto, authentication);
-        if (updateCommentDto.equals(updatedCommentDto)) {
-            return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).build();
-        }
         return ResponseEntity.ok(updatedCommentDto);
     }
 
